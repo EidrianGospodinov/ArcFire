@@ -83,6 +83,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b979ac2534443ec439f5121572d24898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletSound: {fileID: 8300000, guid: 55c030d3c6b3b674e9bdd7449446236c, type: 3}
 --- !u!54 &-1608135214998271183
 Rigidbody:
   m_ObjectHideFlags: 0

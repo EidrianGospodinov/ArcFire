@@ -6,6 +6,7 @@ using UnityEngine;
 public class BulletController : MonoBehaviour
 {
     private Rigidbody rb;
+    [SerializeField] AudioClip bulletSound;
     // Start is called before the first frame update
     void Awake()
     {
@@ -27,6 +28,7 @@ public class BulletController : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
+        AudioManager.instance.Play3D(bulletSound, transform.position);
         Destroy(gameObject);
     }
 }

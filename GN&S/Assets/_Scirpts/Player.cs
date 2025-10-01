@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] Transform bulletSpawn;
     [SerializeField] float fireRate = 0.5f;
     [SerializeField]float bulletSpeed = 1f;
+    [SerializeField] private AudioClip playerShotSound;
     private float nextFire = 0f;
     // Start is called before the first frame update
     void Start()
@@ -45,6 +46,7 @@ public class Player : MonoBehaviour
             nextFire = Time.time + fireRate;
             GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);
             bullet.GetComponent<BulletController>().InitializeBullet(transform.rotation * Vector3.forward, bulletSpeed);
+            AudioManager.instance.Play3D(playerShotSound, transform.position);
         }
     }
 
