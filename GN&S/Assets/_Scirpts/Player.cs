@@ -9,7 +9,6 @@ using UnityEngine.Serialization;
 public class Player : MonoBehaviour
 {
     //serialized
-    [SerializeField] float moveSpeed = 5f;
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] Transform bulletSpawnPosition;
     [SerializeField] float fireRate = 0.5f;
