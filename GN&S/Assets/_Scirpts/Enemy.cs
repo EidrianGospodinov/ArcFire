@@ -65,7 +65,7 @@ public class Enemy : MonoBehaviour
             nextFire = Time.time + fireRate;
             GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition.position, Quaternion.identity);
             var bulletDir = transform.rotation * Vector3.forward;
-            bullet.GetComponent<BulletController>().InitializeBullet(bulletDir, bulletSpeed, 10);
+            bullet.GetComponent<BulletController>().InitializeBullet(bulletDir, bulletSpeed, 25);
             AudioManager.instance.Play3D(playerShotSound, transform.position);
 
             VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletSpawnPosition.position, bulletDir);

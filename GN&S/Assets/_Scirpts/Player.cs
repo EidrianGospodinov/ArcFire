@@ -5,6 +5,7 @@ using OpenCover.Framework.Model;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -15,8 +16,13 @@ public class Player : MonoBehaviour
     [SerializeField]float bulletSpeed = 1f;
     [SerializeField] private AudioClip playerShotSound;
     [SerializeField] GameObject bulletFiringEffect;
+    [SerializeField] Slider healthBar;
+    
+
+    
     
     //public
+    public int health = 100;
     
     //private
     private Rigidbody rb; 
@@ -74,5 +80,31 @@ public class Player : MonoBehaviour
         rb.rotation = rotation;
         var movement = transform.forward * Time.deltaTime;
         rb.MovePosition(rb.position + movement);
+    }
+     void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Bullet"))
+        {
+            BulletController bulletController = collision.gameObject.GetComponent<BulletController>();
+            if (bulletController != null)
+            {
+                TakeDamage(bulletController.bulletDamage);
+            }
+        }
+    }
+
+    private void TakeDamage(int damage)
+    {
+        health -= damage;
+        healthBar.value = health;
+        if (health <= 0)
+        {
+            PlayerDied();
+        }
+    }
+
+    private void PlayerDied()
+    {
+        gameObject.SetActive(false);
     }
 }
