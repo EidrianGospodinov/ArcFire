@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
-    private Rigidbody rb;
     [SerializeField] AudioClip bulletSound;
+    [SerializeField] private GameObject bulletImpactEffect;
+    private Rigidbody rb;
     // Start is called before the first frame update
     void Awake()
     {
@@ -29,6 +30,8 @@ public class BulletController : MonoBehaviour
     private void OnCollisionEnter(Collision other)
     {
         AudioManager.instance.Play3D(bulletSound, transform.position);
+        VFXManager.Instance.PlayVFX(bulletImpactEffect, transform.position);
+        
         Destroy(gameObject);
     }
 }
