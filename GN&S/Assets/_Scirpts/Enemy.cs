@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -11,9 +12,12 @@ public class Enemy : MonoBehaviour
     [SerializeField] float bulletSpeed = 1f;
     [SerializeField] private AudioClip playerShotSound;
     [SerializeField] GameObject bulletFiringEffect;
+    [SerializeField] Slider healthBar;
+    
 
     //public
-
+    public int health = 100;
+    
     //private
     private Rigidbody rb;
     private float nextFire = 0f;
@@ -27,6 +31,33 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Bullet"))
+        {
+            BulletController bulletController = collision.gameObject.GetComponent<BulletController>();
+            if (bulletController != null)
+            {
+                TakeDamage(bulletController.bulletDamage);
+            }
+        }
+    }
+
+    private void TakeDamage(int damage)
+    {
+        health -= damage;
+        healthBar.value = health;
+        if (health <= 0)
+        {
+            EnemyDied();
+        }
+    }
+
+    private void EnemyDied()
+    {
+        gameObject.SetActive(false);
+    }
+
     private void Fire()
     {
         if (Time.time >= nextFire)
@@ -34,7 +65,7 @@ public class Enemy : MonoBehaviour
             nextFire = Time.time + fireRate;
             GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition.position, Quaternion.identity);
             var bulletDir = transform.rotation * Vector3.forward;
-            bullet.GetComponent<BulletController>().InitializeBullet(bulletDir, bulletSpeed);
+            bullet.GetComponent<BulletController>().InitializeBullet(bulletDir, bulletSpeed, 10);
             AudioManager.instance.Play3D(playerShotSound, transform.position);
 
             VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletSpawnPosition.position, bulletDir);

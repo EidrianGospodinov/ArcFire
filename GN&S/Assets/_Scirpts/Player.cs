@@ -25,6 +25,8 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         rb = GetComponent<Rigidbody>();
     }
 
@@ -53,7 +55,7 @@ public class Player : MonoBehaviour
             nextFire = Time.time + fireRate;
             GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition.position, Quaternion.identity);
             var bulletDir = transform.rotation * Vector3.forward;
-            bullet.GetComponent<BulletController>().InitializeBullet(bulletDir, bulletSpeed);
+            bullet.GetComponent<BulletController>().InitializeBullet(bulletDir, bulletSpeed, 10);
             AudioManager.instance.Play3D(playerShotSound, transform.position);
             
             VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletSpawnPosition.position, bulletDir);
