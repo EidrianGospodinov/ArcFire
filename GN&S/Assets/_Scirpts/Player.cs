@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip playerShotSound;
     [SerializeField] GameObject bulletFiringEffect;
     [SerializeField] Slider healthBar;
+    [SerializeField] int bulletDamage;
     
 
     
@@ -61,7 +62,7 @@ public class Player : MonoBehaviour
             nextFire = Time.time + fireRate;
             GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition.position, Quaternion.identity);
             var bulletDir = transform.rotation * Vector3.forward;
-            bullet.GetComponent<BulletController>().InitializeBullet(bulletDir, bulletSpeed, 10);
+            bullet.GetComponent<BulletController>().InitializeBullet(bulletDir, bulletSpeed, bulletDamage);
             AudioManager.instance.Play3D(playerShotSound, transform.position);
             
             VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletSpawnPosition.position, bulletDir);
