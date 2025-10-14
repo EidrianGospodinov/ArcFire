@@ -26,7 +26,7 @@ public class BulletController : MonoBehaviour
     public void InitializeBullet(Vector3 originalDirection, float bulletSpeed, int bulletDamage)
     {
         transform.forward = originalDirection;
-        rb.velocity = transform.forward * bulletSpeed;
+        rb.linearVelocity = transform.forward * bulletSpeed;
         this.bulletDamage = bulletDamage;
     }
 
