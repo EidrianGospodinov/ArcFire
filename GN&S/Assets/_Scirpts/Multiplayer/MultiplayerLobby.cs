@@ -19,6 +19,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     [SerializeField] InputField playerNameInput;
 
     [SerializeField] GameObject textPrefab;
+    [SerializeField] GameObject startGameButton;
     [SerializeField] Transform insideRoomPlayerList;
     [SerializeField] Transform listRoomPanel;
     [SerializeField] GameObject roomEntryPrefab;
@@ -34,6 +35,13 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
         playerNameInput.text = playerName = string.Format($"Player {Random.Range(1, 10000000)}");
 
         cachedRoomList = new Dictionary<string, RoomInfo>();
+        PhotonNetwork.AutomaticallySyncScene = true;
+    }
+    public void StartGameClicked()
+    {
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
+        PhotonNetwork.LoadLevel("Multiplayer");
     }
     public void UpdateCachedRoomList(List<RoomInfo> roomList)
     {
@@ -128,6 +136,8 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
         base.OnJoinedRoom();
         print("joined room!");
         ActivatePanel("InsideRoom");
+        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+
         foreach (var player in PhotonNetwork.PlayerList)
         {
             var playerListEntry = Instantiate(textPrefab, insideRoomPlayerList);
@@ -244,6 +254,11 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
             }
         }
 
+    }
+    public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
+    {
+        base.OnMasterClientSwitched(newMasterClient);
+        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
     
 }

@@ -34781,6 +34781,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: c83f502368bab8140af79867b14e99c9, type: 3}
   m_PrefabInstance: {fileID: 66642687}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &84717466 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6812360275880991983, guid: 63eeed59a09b7964188723bc31f849ad, type: 3}
+  m_PrefabInstance: {fileID: 1373101491}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &94853684 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6812360275661751425, guid: 63eeed59a09b7964188723bc31f849ad, type: 3}
@@ -186497,6 +186502,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6812360275880991981, guid: 63eeed59a09b7964188723bc31f849ad, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1373101494}
+    - target: {fileID: 6812360275880991981, guid: 63eeed59a09b7964188723bc31f849ad, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: StartGameClicked
+      objectReference: {fileID: 0}
+    - target: {fileID: 6812360275880991981, guid: 63eeed59a09b7964188723bc31f849ad, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MultiplayerLobby, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 6812360275905130702, guid: 63eeed59a09b7964188723bc31f849ad, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -186774,6 +186791,7 @@ MonoBehaviour:
   roomNameInput: {fileID: 1049274123}
   playerNameInput: {fileID: 198428891}
   textPrefab: {fileID: 5833277414286518546, guid: 00707c3d4f57eaa4b9623a2e87b313d7, type: 3}
+  startGameButton: {fileID: 84717466}
   insideRoomPlayerList: {fileID: 279231215}
   listRoomPanel: {fileID: 1373101495}
   roomEntryPrefab: {fileID: 2667130366036724534, guid: 441c8085485e1cf4eb3fc2764938800c, type: 3}
