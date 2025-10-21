@@ -76,6 +76,10 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.Disconnect();
     }
+    public void GoToCreateRoom()
+    {
+        ActivatePanel("CreateRoom");
+    }
     public void CreateARoom()
     {
         RoomOptions roomOptions= new RoomOptions();
@@ -127,7 +131,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
             var newRoomEntry = Instantiate(roomEntryPrefab, ListRoomPanelContent);
             var newRoomEntryScript = newRoomEntry.GetComponent<RoomEntry>();
             newRoomEntryScript.roomName = room.Name;
-            newRoomEntryScript.roomText.text = string.Format($"[{room.Name} - ({room.PlayerCount}, / {room.MaxPlayers}");
+            newRoomEntryScript.roomText.text = string.Format("[{0} - ({1} / {2})]", room.Name, room.PlayerCount, room.MaxPlayers);
         }
 
 
