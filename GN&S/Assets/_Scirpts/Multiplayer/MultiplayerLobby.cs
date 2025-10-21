@@ -122,7 +122,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
         base.OnCreateRoomFailed(returnCode, message);
         print("failed to create room");
     }
-    List<GameObject> PlayerList = new List<GameObject>();
+    //List<GameObject> PlayerList = new List<GameObject>();
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
@@ -131,13 +131,14 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
         foreach (var player in PhotonNetwork.PlayerList)
         {
             var playerListEntry = Instantiate(textPrefab, insideRoomPlayerList);
-            PlayerList.Add(playerListEntry);
+            //PlayerList.Add(playerListEntry);
             playerListEntry.GetComponent<Text>().text = player.NickName;
             playerListEntry.name = player.NickName;
         }
     }
     public void ListRoomClicked()
     {
+        print("list room button clicked");
         PhotonNetwork.JoinLobby();
     }
     public override void OnJoinedLobby()
@@ -149,7 +150,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         base.OnRoomListUpdate(roomList);
-        print("Room count: {}" + roomList.Count);
+        Debug.Log($"Room count: {roomList.Count}");
 
         DestroyChildren(ListRoomPanelContent);
 
@@ -172,16 +173,16 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
         base.OnLeftRoom();
         print("left from this room!");
 
-        var playerTextGameObject = PlayerList.Find(x => x.GetComponent<Text>().text == this.playerName);
+        /*var playerTextGameObject = PlayerList.Find(x => x.GetComponent<Text>().text == this.playerName);
         
         PlayerList.Remove(playerTextGameObject);
-        Destroy(playerTextGameObject);
+        Destroy(playerTextGameObject);*/
 
         DestroyChildren(insideRoomPlayerList);
 
         ActivatePanel("CreateRoom");
     }
-    public void LeaveRoom()
+    public void LeaveRoomClicked()
     {
         PhotonNetwork.LeaveRoom();
     }
