@@ -17,10 +17,14 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
 
     [SerializeField] InputField roomNameInput;
     [SerializeField] InputField playerNameInput;
-    string playerName;
 
     [SerializeField] GameObject textPrefab;
     [SerializeField] Transform insideRoomPlayerList;
+    [SerializeField] Transform listRoomPanel;
+    [SerializeField] GameObject roomEntryPrefab;
+    [SerializeField] Transform ListRoomPanelContent;
+
+    private string playerName;
 
     private void Start()
     {
@@ -104,6 +108,30 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
 
         }
     }
+    public void ListRoomClicked()
+    {
+        PhotonNetwork.JoinLobby();
+    }
+    public override void OnJoinedLobby()
+    {
+        base.OnJoinedLobby();
+        print("joined lobby!");
+        ActivatePanel("ListRooms");
+    }
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        base.OnRoomListUpdate(roomList);
+        print("Room count: {}" + roomList.Count);
+        foreach (var room in roomList)
+        {
+            var newRoomEntry = Instantiate(roomEntryPrefab, ListRoomPanelContent);
+            var newRoomEntryScript = newRoomEntry.GetComponent<RoomEntry>();
+            newRoomEntryScript.roomName = room.Name;
+            newRoomEntryScript.roomText.text = string.Format($"[{room.Name} - ({room.PlayerCount}, / {room.MaxPlayers}");
+        }
+
+
+    }
 
     public override void OnLeftRoom()
     {
@@ -120,5 +148,16 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
+    }
+    public void LeaveLobbyClicked()
+    {
+        PhotonNetwork.LeaveLobby();
+
+    }
+    public override void OnLeftLobby()
+    {
+        base.OnLeftLobby();
+        print("Left Lobby");
+        ActivatePanel("Selection");
     }
 }
