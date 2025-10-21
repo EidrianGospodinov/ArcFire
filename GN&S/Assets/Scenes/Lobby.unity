@@ -186207,7 +186207,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6812360274712863568, guid: 63eeed59a09b7964188723bc31f849ad, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6812360274769694256, guid: 63eeed59a09b7964188723bc31f849ad, type: 3}
       propertyPath: m_IsActive
@@ -186220,18 +186220,18 @@ PrefabInstance:
     - target: {fileID: 6812360274888193154, guid: 63eeed59a09b7964188723bc31f849ad, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1373101494}
     - target: {fileID: 6812360274888193154, guid: 63eeed59a09b7964188723bc31f849ad, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
+      value: OnJoinRandomRoomClicked
       objectReference: {fileID: 0}
     - target: {fileID: 6812360274888193154, guid: 63eeed59a09b7964188723bc31f849ad, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: 
+      value: MultiplayerLobby, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 6812360274888193154, guid: 63eeed59a09b7964188723bc31f849ad, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: 
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 6812360274888193155, guid: 63eeed59a09b7964188723bc31f849ad, type: 3}
       propertyPath: m_AnchorMax.y
@@ -186519,7 +186519,7 @@ PrefabInstance:
       objectReference: {fileID: 1373101494}
     - target: {fileID: 6812360276152990339, guid: 63eeed59a09b7964188723bc31f849ad, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: LeaveRoom
+      value: OnLeftRoom
       objectReference: {fileID: 0}
     - target: {fileID: 6812360276152990339, guid: 63eeed59a09b7964188723bc31f849ad, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -186535,7 +186535,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6812360276169851821, guid: 63eeed59a09b7964188723bc31f849ad, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6812360276238711494, guid: 63eeed59a09b7964188723bc31f849ad, type: 3}
       propertyPath: m_AnchorMax.x

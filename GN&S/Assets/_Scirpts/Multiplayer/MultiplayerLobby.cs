@@ -25,11 +25,35 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     [SerializeField] Transform ListRoomPanelContent;
 
     private string playerName;
+    private Dictionary<string, RoomInfo> cachedRoomList;
+
 
     private void Start()
     {
         ActivatePanel("Login");
         playerNameInput.text = playerName = string.Format($"Player {Random.Range(1, 10000000)}");
+
+        cachedRoomList = new Dictionary<string, RoomInfo>();
+    }
+    public void UpdateCachedRoomList(List<RoomInfo> roomList)
+    {
+        if (roomList == null)
+        {
+            return;
+        }
+        foreach (RoomInfo room in roomList)
+        {
+            if (!room.IsOpen || !room.IsVisible || room.RemovedFromList)
+            {
+                cachedRoomList.Remove(room.Name);
+            }
+            else
+            {
+                cachedRoomList[room.Name] = room;
+            }
+        }
+
+
     }
 
     public MultiplayerLobby()
@@ -109,7 +133,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
             var playerListEntry = Instantiate(textPrefab, insideRoomPlayerList);
             PlayerList.Add(playerListEntry);
             playerListEntry.GetComponent<Text>().text = player.NickName;
-
+            playerListEntry.name = player.NickName;
         }
     }
     public void ListRoomClicked()
@@ -126,12 +150,18 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     {
         base.OnRoomListUpdate(roomList);
         print("Room count: {}" + roomList.Count);
-        foreach (var room in roomList)
+
+        DestroyChildren(ListRoomPanelContent);
+
+        UpdateCachedRoomList(roomList);
+
+
+        foreach (var room in cachedRoomList)
         {
             var newRoomEntry = Instantiate(roomEntryPrefab, ListRoomPanelContent);
             var newRoomEntryScript = newRoomEntry.GetComponent<RoomEntry>();
-            newRoomEntryScript.roomName = room.Name;
-            newRoomEntryScript.roomText.text = string.Format("[{0} - ({1} / {2})]", room.Name, room.PlayerCount, room.MaxPlayers);
+            newRoomEntryScript.roomName = room.Key;
+            newRoomEntryScript.roomText.text = string.Format("[{0} - ({1} / {2})]", room.Key, room.Value.PlayerCount, room.Value.MaxPlayers);
         }
 
 
@@ -140,14 +170,16 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         base.OnLeftRoom();
-        print("left from this room, joined different one");
-        ActivatePanel("CreateRoom");
+        print("left from this room!");
 
         var playerTextGameObject = PlayerList.Find(x => x.GetComponent<Text>().text == this.playerName);
         
         PlayerList.Remove(playerTextGameObject);
         Destroy(playerTextGameObject);
 
+        DestroyChildren(insideRoomPlayerList);
+
+        ActivatePanel("CreateRoom");
     }
     public void LeaveRoom()
     {
@@ -162,6 +194,55 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     {
         base.OnLeftLobby();
         print("Left Lobby");
+        DestroyChildren(ListRoomPanelContent);
+        DestroyChildren(insideRoomPlayerList);
+        cachedRoomList.Clear();
         ActivatePanel("Selection");
     }
+    public void DestroyChildren(Transform parent)
+    {
+        foreach(Transform child in parent)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+    public void OnJoinRandomRoomClicked()
+    {
+        var randRoomSuccess = PhotonNetwork.JoinRandomRoom();
+        if (randRoomSuccess)
+        {// can be done with override OnJoinRandomFailed
+            print("fail to join random room!");
+        }
+        else
+        {
+            print("successfully joinded a random room!");
+        }
+    }
+
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    {
+        base.OnPlayerEnteredRoom(newPlayer);
+        print("Player joined room!");
+        var playerListEntry = Instantiate(textPrefab, insideRoomPlayerList);
+        //PlayerList.Add(playerListEntry);
+        playerListEntry.GetComponent<Text>().text = newPlayer.NickName;
+        playerListEntry.name = newPlayer.NickName;
+    }
+
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
+    {
+        base.OnPlayerLeftRoom(otherPlayer);
+        print("Player left room");
+        foreach (Transform child in insideRoomPlayerList)
+        {
+            //terrible for bigger games
+            if(child.name == otherPlayer.NickName)
+            {
+                Destroy(child.gameObject);
+                break;
+            }
+        }
+
+    }
+    
 }
