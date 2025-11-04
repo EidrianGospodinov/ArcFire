@@ -12,7 +12,6 @@ public class MultyPlayer : MonoBehaviour
     [SerializeField]float bulletSpeed = 1f;
     [SerializeField] private AudioClip playerShotSound;
     [SerializeField] GameObject bulletFiringEffect;
-    [SerializeField] Slider healthBar;
     [SerializeField] int bulletDamage;
     
 
@@ -25,6 +24,7 @@ public class MultyPlayer : MonoBehaviour
     private Rigidbody rb; 
     private float nextFire = 0f;
 
+    Slider healthBar;
     PhotonView photonView;
 
     // Start is called before the first frame update
@@ -34,6 +34,7 @@ public class MultyPlayer : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         rb = GetComponent<Rigidbody>();
         photonView = GetComponent<PhotonView>();
+        healthBar = FindFirstObjectByType<Slider>();
     }
 
     // Update is called once per frame
@@ -46,18 +47,18 @@ public class MultyPlayer : MonoBehaviour
         Move();
         if(Input.GetMouseButtonDown(0))
         {
-            Fire();
+            photonView.RPC("Fire", RpcTarget.AllViaServer);
         }
     }
 
     private void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        /*if(Input.GetMouseButtonDown(0))
         {
             Fire();
-        }
+        }*/
     }
-
+    [PunRPC]
     private void Fire()
     {
         if (Time.time >= nextFire)
@@ -65,7 +66,7 @@ public class MultyPlayer : MonoBehaviour
             nextFire = Time.time + fireRate;
             GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition.position, Quaternion.identity);
             var bulletDir = transform.rotation * Vector3.forward;
-            bullet.GetComponent<BulletController>().InitializeBullet(bulletDir, bulletSpeed, bulletDamage);
+            bullet.GetComponent<MultiplayerBulletController>()?.InitializeBullet(bulletDir, bulletSpeed, bulletDamage);
             AudioManager.instance.Play3D(playerShotSound, transform.position);
             
             VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletSpawnPosition.position, bulletDir);
@@ -89,7 +90,7 @@ public class MultyPlayer : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Bullet"))
         {
-            BulletController bulletController = collision.gameObject.GetComponent<BulletController>();
+            MultiplayerBulletController bulletController = collision.gameObject.GetComponent<MultiplayerBulletController>();
             if (bulletController != null)
             {
                 TakeDamage(bulletController.bulletDamage);
