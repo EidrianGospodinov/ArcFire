@@ -3,13 +3,14 @@ using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MultyPlayer : MonoBehaviour
+public class MultyPlayer : MonoBehaviour, IPunObservable
 {
     //serialized
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] Transform bulletSpawnPosition;
     [SerializeField] float fireRate = 0.5f;
     [SerializeField]float bulletSpeed = 1f;
+    [SerializeField] Slider healthBar;
     [SerializeField] private AudioClip playerShotSound;
     [SerializeField] GameObject bulletFiringEffect;
     [SerializeField] int bulletDamage;
@@ -24,7 +25,7 @@ public class MultyPlayer : MonoBehaviour
     private Rigidbody rb; 
     private float nextFire = 0f;
 
-    Slider healthBar;
+    Slider mainHealthbar;
     PhotonView photonView;
 
     // Start is called before the first frame update
@@ -34,7 +35,7 @@ public class MultyPlayer : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         rb = GetComponent<Rigidbody>();
         photonView = GetComponent<PhotonView>();
-        healthBar = FindFirstObjectByType<Slider>();
+        mainHealthbar = FindFirstObjectByType<Slider>();
     }
 
     // Update is called once per frame
@@ -45,18 +46,22 @@ public class MultyPlayer : MonoBehaviour
             return;
         }
         Move();
-        if(Input.GetMouseButtonDown(0))
+       /* if(Input.GetMouseButtonDown(0))
         {
             photonView.RPC("Fire", RpcTarget.AllViaServer);
-        }
+        }*/
     }
 
     private void Update()
     {
-        /*if(Input.GetMouseButtonDown(0))
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+        if (Input.GetMouseButtonDown(0))
         {
             Fire();
-        }*/
+        }
     }
     [PunRPC]
     private void Fire()
@@ -102,6 +107,7 @@ public class MultyPlayer : MonoBehaviour
     {
         health -= damage;
         healthBar.value = health;
+        mainHealthbar.value = health;
         if (health <= 0)
         {
             PlayerDied();
@@ -110,6 +116,21 @@ public class MultyPlayer : MonoBehaviour
 
     private void PlayerDied()
     {
-        gameObject.SetActive(false);
+        health = 100;
+        healthBar.value = health;
+        //gameObject.SetActive(false);
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(health);
+        }
+        else
+        {
+            health = (int)stream.ReceiveNext();
+            healthBar.value=health;
+        }
     }
 }
