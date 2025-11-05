@@ -1,5 +1,6 @@
 
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,8 +32,8 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        GameManager.Instance.SetCursorState(false);
+        
         rb = GetComponent<Rigidbody>();
         photonView = GetComponent<PhotonView>();
         mainHealthbar = FindFirstObjectByType<Slider>();
@@ -71,7 +72,7 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
             nextFire = Time.time + fireRate;
             GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition.position, Quaternion.identity);
             var bulletDir = transform.rotation * Vector3.forward;
-            bullet.GetComponent<MultiplayerBulletController>()?.InitializeBullet(bulletDir, bulletSpeed, bulletDamage);
+            bullet.GetComponent<MultiplayerBulletController>()?.InitializeBullet(bulletDir, bulletSpeed, bulletDamage, photonView.Owner );
             AudioManager.instance.Play3D(playerShotSound, transform.position);
             
             VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletSpawnPosition.position, bulletDir);
@@ -98,18 +99,19 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
             MultiplayerBulletController bulletController = collision.gameObject.GetComponent<MultiplayerBulletController>();
             if (bulletController != null)
             {
-                TakeDamage(bulletController.bulletDamage);
+                TakeDamage(bulletController);
             }
         }
     }
 
-    private void TakeDamage(int damage)
+    private void TakeDamage(MultiplayerBulletController bulletController)
     {
-        health -= damage;
+        health -= bulletController.bulletDamage;
         healthBar.value = health;
         mainHealthbar.value = health;
         if (health <= 0)
         {
+            bulletController.Owner.AddScore(1);
             PlayerDied();
         }
     }

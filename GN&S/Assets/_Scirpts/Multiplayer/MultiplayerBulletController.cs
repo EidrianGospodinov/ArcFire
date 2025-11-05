@@ -1,13 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
-public class MultiplayerBulletController : MonoBehaviour
+public class MultiplayerBulletController : MonoBehaviourPunCallbacks
 {
     [SerializeField] AudioClip bulletSound;
     [SerializeField] private GameObject bulletImpactEffect;
     public int bulletDamage;
+    
+    [HideInInspector]
+    public Photon.Realtime.Player Owner;
     
     private Rigidbody rb;
 
@@ -23,11 +27,13 @@ public class MultiplayerBulletController : MonoBehaviour
         
     }
 
-    public void InitializeBullet(Vector3 originalDirection, float bulletSpeed, int bulletDamage)
+    public void InitializeBullet(Vector3 originalDirection, float bulletSpeed, int bulletDamage, Photon.Realtime.Player givenPlayer)
     {
         transform.forward = originalDirection;
         rb.linearVelocity = transform.forward * bulletSpeed;
         this.bulletDamage = bulletDamage;
+
+        Owner = givenPlayer;
     }
 
     private void OnCollisionEnter(Collision other)
