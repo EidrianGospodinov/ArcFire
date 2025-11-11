@@ -61,7 +61,7 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
         }
         if (Input.GetMouseButtonDown(0))
         {
-            Fire();
+            photonView.RPC("Fire", RpcTarget.AllViaServer);
         }
     }
     [PunRPC]
