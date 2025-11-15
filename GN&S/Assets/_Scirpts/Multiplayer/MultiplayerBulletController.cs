@@ -43,9 +43,9 @@ public class MultiplayerBulletController : MonoBehaviourPunCallbacks
         {
             return;
         }
-        
+        Vector3 impactPoint = other.contacts[0].point; // Gets the position of the first contact point
         AudioManager.instance.Play3D(bulletSound, transform.position);
-        VFXManager.Instance.PlayVFX(bulletImpactEffect, transform.position);
+        VFXManager.Instance.PlayVFX(bulletImpactEffect, impactPoint);
         
         Destroy(gameObject);
     }
