@@ -10,6 +10,8 @@ public class MultiplayerBulletController : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject bulletImpactEffect;
     public int bulletDamage;
     
+    public float maxLifetime = 5.0f;
+    
     [HideInInspector]
     public Photon.Realtime.Player Owner;
     
@@ -19,6 +21,11 @@ public class MultiplayerBulletController : MonoBehaviourPunCallbacks
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+    }
+
+    private void Start()
+    {
+        Destroy(gameObject, maxLifetime);
     }
 
     // Update is called once per frame
