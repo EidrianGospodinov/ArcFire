@@ -16,6 +16,8 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
     [SerializeField] GameObject bulletFiringEffect;
     [SerializeField] int bulletDamage;
     
+    
+    
 
     public float moveSpeed = 5f; 
     public float rotationSmoothTime = 0.05f; 
@@ -30,6 +32,14 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
 
     Slider mainHealthbar;
     PhotonView photonView;
+    
+    
+    public Transform weaponAimPivot; // Drag your 'Weapon Pivot' object here in the Inspector
+    public float verticalAimSpeed = 50f; // How fast the weapon moves up/down (degrees per second)
+    public float maxAimAngle = 80f;      // Max angle up from horizontal
+    public float minAimAngle = -45f;     // Max angle down from horizontal
+
+    private float currentVerticalAim = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -59,13 +69,66 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
             return;
         }
         Move();
+        HandleWeaponAimInput();
         if (Input.GetMouseButtonDown(0))
         {
             photonView.RPC("Fire", RpcTarget.AllViaServer);
         }
     }
+
     [PunRPC]
     private void Fire()
+    {
+        if (Time.time >= nextFire)
+        {
+            nextFire = Time.time + fireRate;
+            GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPosition.position, Quaternion.identity);
+            
+            var bulletDir = bulletSpawnPosition.forward;
+            
+            // Set the bullet's rotation to match its trajectory
+            bullet.transform.rotation = Quaternion.LookRotation(bulletDir);
+            
+            bullet.GetComponent<MultiplayerBulletController>()?.InitializeBullet(bulletDir, bulletSpeed, bulletDamage, photonView.Owner );
+            
+            
+            
+            AudioManager.instance.Play3D(playerShotSound, transform.position);
+            
+            VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletSpawnPosition.position, bulletDir);
+        }
+    }
+    private void HandleWeaponAimInput()
+    {
+        if (weaponAimPivot == null) return;
+    
+        float input = 0f;
+
+        // Check for Q (Aim Up)
+        if (Input.GetKey(KeyCode.Q))
+        {
+            input = 1f;
+        }
+        // Check for E (Aim Down)
+        else if (Input.GetKey(KeyCode.E))
+        {
+            input = -1f;
+        }
+
+        if (input != 0)
+        {
+            // 1. Calculate the change in vertical aim based on input and time
+            currentVerticalAim += input * verticalAimSpeed * Time.deltaTime;
+        
+            // 2. Clamp the angle to prevent the weapon from rotating too far
+            currentVerticalAim = Mathf.Clamp(currentVerticalAim, minAimAngle, maxAimAngle);
+        }
+    
+        // 3. Apply the stored angle to the weapon pivot's local rotation
+        // We only change the X-axis (pitch).
+        weaponAimPivot.localRotation = Quaternion.Euler(currentVerticalAim, 0f, 0f);
+    }
+    private void OldFire()
     {
         if (Time.time >= nextFire)
         {
@@ -130,6 +193,10 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
             MultiplayerBulletController bulletController = collision.gameObject.GetComponent<MultiplayerBulletController>();
             if (bulletController != null)
             {
+                if (Equals(bulletController.Owner, photonView.Owner))
+                {
+                    return;
+                }
                 TakeDamage(bulletController);
             }
         }

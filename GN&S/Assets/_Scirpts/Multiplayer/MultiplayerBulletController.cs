@@ -38,6 +38,12 @@ public class MultiplayerBulletController : MonoBehaviourPunCallbacks
 
     private void OnCollisionEnter(Collision other)
     {
+        var targetPhotonView = other.gameObject.GetComponent<PhotonView>();
+        if (targetPhotonView != null && Equals(targetPhotonView.Owner, Owner))
+        {
+            return;
+        }
+        
         AudioManager.instance.Play3D(bulletSound, transform.position);
         VFXManager.Instance.PlayVFX(bulletImpactEffect, transform.position);
         
