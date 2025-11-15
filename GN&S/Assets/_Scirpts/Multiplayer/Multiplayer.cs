@@ -17,7 +17,9 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
     [SerializeField] int bulletDamage;
     
 
-    
+    public float moveSpeed = 5f; 
+    public float rotationSmoothTime = 0.05f; 
+    private float rotationVelocity;
     
     //public
     public int health = 100;
@@ -46,11 +48,8 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
         {
             return;
         }
-        Move();
-       /* if(Input.GetMouseButtonDown(0))
-        {
-            photonView.RPC("Fire", RpcTarget.AllViaServer);
-        }*/
+        
+       
     }
 
     private void Update()
@@ -59,6 +58,7 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
         {
             return;
         }
+        Move();
         if (Input.GetMouseButtonDown(0))
         {
             photonView.RPC("Fire", RpcTarget.AllViaServer);
@@ -80,6 +80,37 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
     }
 
     private void Move()
+    {
+        float horizontalInput = Input.GetAxis("Horizontal"); 
+        float verticalInput = Input.GetAxis("Vertical");   
+
+        Vector3 inputDirection = new Vector3(horizontalInput, 0f, verticalInput).normalized;
+
+        if (inputDirection.magnitude < 0.1f)
+        {
+            // If no movement input, just return
+            return;
+        }
+
+
+        if (Camera.main != null)
+        {
+            float targetAngle = Camera.main.transform.eulerAngles.y;
+
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, 
+                targetAngle, 
+                ref rotationVelocity, 
+                rotationSmoothTime);
+        
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+        }
+        
+        Vector3 moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
+
+        transform.position += moveDirection * moveSpeed * Time.deltaTime;
+    
+    }
+    private void OldMove()
     {
         if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
         {

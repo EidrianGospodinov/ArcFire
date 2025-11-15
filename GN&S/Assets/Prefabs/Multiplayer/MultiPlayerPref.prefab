@@ -334,6 +334,8 @@ MonoBehaviour:
   playerShotSound: {fileID: 8300000, guid: 9d685be7bcccd974bb6312c9965ff4e5, type: 3}
   bulletFiringEffect: {fileID: 1000011513120438, guid: f70d27f5cf28c8941bbfd6febd74797f, type: 3}
   bulletDamage: 33
+  moveSpeed: 1
+  rotationSmoothTime: 0.05
   health: 100
 --- !u!114 &1093686655966019431
 MonoBehaviour:
