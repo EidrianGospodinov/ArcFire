@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class MultiplayerLobby : MonoBehaviourPunCallbacks
 {
 
-    //todo fix this noncence -- activate panel
+    //todo fix this nonsense -- activate panel
     [SerializeField] Transform LoginPanel;
     [SerializeField] Transform SelectionPanel;
     [SerializeField] Transform CreateRoomPanel;
