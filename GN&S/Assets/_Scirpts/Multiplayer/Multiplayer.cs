@@ -15,30 +15,29 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
     [SerializeField] private AudioClip playerShotSound;
     [SerializeField] GameObject bulletFiringEffect;
     [SerializeField] int bulletDamage;
+    [SerializeField] int maxHealth = 100;
     
     
     
 
+    //public
     public float moveSpeed = 5f; 
     public float rotationSmoothTime = 0.05f; 
     private float rotationVelocity;
     
-    //public
-    public int health = 100;
+    public Transform weaponAimPivot; 
+    public float verticalAimSpeed = 50f;
+    public float maxAimAngle = 80f;     
+    public float minAimAngle = -45f;    
     
     //private
+    private int health = 100;
     private Rigidbody rb; 
     private float nextFire = 0f;
 
-    Slider mainHealthbar;
-    PhotonView photonView;
+    private UiHealthBar mainHealthbar;
+    private PhotonView photonView;
     
-    
-    public Transform weaponAimPivot; // Drag your 'Weapon Pivot' object here in the Inspector
-    public float verticalAimSpeed = 50f; // How fast the weapon moves up/down (degrees per second)
-    public float maxAimAngle = 80f;      // Max angle up from horizontal
-    public float minAimAngle = -45f;     // Max angle down from horizontal
-
     private float currentVerticalAim = 0f;
 
     // Start is called before the first frame update
@@ -48,7 +47,13 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
         
         rb = GetComponent<Rigidbody>();
         photonView = GetComponent<PhotonView>();
-        mainHealthbar = FindFirstObjectByType<Slider>();
+        mainHealthbar = GameObject.FindWithTag("HealthBarMain")?.GetComponent<UiHealthBar>();
+
+        health = maxHealth;
+        if (photonView.IsMine)
+        {
+            healthBar.gameObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -205,8 +210,7 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
     private void TakeDamage(MultiplayerBulletController bulletController)
     {
         health -= bulletController.bulletDamage;
-        healthBar.value = health;
-        mainHealthbar.value = health;
+        UpdateHealthUI();
         if (health <= 0)
         {
             bulletController.Owner.AddScore(1);
@@ -216,9 +220,7 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
 
     private void PlayerDied()
     {
-        health = 100;
-        healthBar.value = health;
-        //gameObject.SetActive(false);
+        UpdateHealthUI(true);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -231,6 +233,20 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
         {
             health = (int)stream.ReceiveNext();
             healthBar.value=health;
+        }
+    }
+    public void UpdateHealthUI(bool isPlayerDead = false) 
+    {
+        if (isPlayerDead)
+        {
+            health = maxHealth;
+        }
+        float percentage = (float)health / maxHealth;
+        healthBar.value = health; 
+        
+        if (photonView.IsMine)
+        {
+            mainHealthbar.SetHealthBarPercentage(percentage);
         }
     }
 }
