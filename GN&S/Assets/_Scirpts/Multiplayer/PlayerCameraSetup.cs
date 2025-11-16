@@ -32,6 +32,9 @@ public class PlayerCameraSetup : MonoBehaviour
             return;
         }
 
-        cineMachine.enabled = !GameManager.Instance.isGamePausedOrOver;
+        if (cineMachine != null)
+        {
+            cineMachine.enabled = !GameManager.Instance.isGamePausedOrOver;
+        }
     }
 }

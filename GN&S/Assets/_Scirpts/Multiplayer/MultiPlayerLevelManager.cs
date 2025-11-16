@@ -1,56 +1,130 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] Transform playerTransform;
+    [SerializeField] private Timer timer;
 
     public int maxKills = 3;
 
     public GameObject gameOverPopup;
-    public Text winnerText;
+    public Text winnerTitleText;
+
+    public Text winnerBodyText;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         GameManager.Instance.PlayersInGame.Add(
             PhotonNetwork.Instantiate("MultiPlayerPref", playerTransform.position, Quaternion.identity));
+
+        timer.OnTimerComplete += OnGameTimerFinished;
+        timer.StartTimer();
+
     }
 
-    void OnEnable()
+    private void OnDestroy()
     {
-        base.OnEnable();
-        Debug.Log("OnEnable");
+        timer.OnTimerComplete -= OnGameTimerFinished;
     }
 
-    void OnDisable()
+    private void OnGameTimerFinished()
     {
-        base.OnDisable();
-        Debug.Log("OnDisable");
+        if (PhotonNetwork.InRoom)
+        {
+            var playerList = PhotonNetwork.PlayerList;
+            var highestScorers = new List<Photon.Realtime.Player>();
+            int highestScore = 0;
+            foreach (var player in playerList)
+            {
+                int playerScore = player.GetScore();
+                if (playerScore > highestScore)
+                {
+                    highestScorers.Clear();
+                    highestScorers.Add(player);
+                    highestScore = playerScore;
+                }
+                else if (playerScore == highestScore)
+                {
+                    highestScorers.Add(player);
+                }
+            }
+
+            if (highestScorers.Count == 1)
+            {
+                WinLoseTextUpdate(highestScorers[0]);
+            }
+            else
+            {
+                winnerTitleText.text = "Draw";
+                if (highestScore == 0)
+                {
+                    winnerBodyText.text = "No Winners!";
+                }
+                else
+                {
+                    StringBuilder nicknameList = new StringBuilder();
+                    for (int i = 0; i < highestScorers.Count; i++)
+                    {
+                        nicknameList.Append(highestScorers[i].NickName);
+        
+                        if (i < highestScorers.Count - 2)
+                        {
+                            nicknameList.Append(", "); // Comma separation for all but the last two
+                        }
+                        else if (i == highestScorers.Count - 2)
+                        {
+                            nicknameList.Append(" and "); // "and" before the last player
+                        }
+                    }
+                    winnerBodyText.text = $"The game is a tie! Players {nicknameList}" +
+                                          $" finished with an equal score of {highestScore}.";
+                }
+                
+                
+            }
+            EndGame();   
+        }
     }
-    
+
+
     public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         if (targetPlayer.GetScore() == maxKills)
         {
-            if (PhotonNetwork.NickName == targetPlayer.NickName)
-            {
-                winnerText.text = "You";
-            }
-            else
-            {
-                winnerText.text = targetPlayer.NickName;
-            }
-            var gameManagerInstance =  GameManager.Instance;
-            gameManagerInstance.SetCursorState(false);
-            gameManagerInstance.isGamePausedOrOver = true;
-            
-            gameOverPopup.SetActive(true);
+            WinLoseTextUpdate(targetPlayer);
+            EndGame();
         }
+    }
+
+    private void WinLoseTextUpdate(Photon.Realtime.Player targetPlayer)
+    {
+        if (PhotonNetwork.NickName == targetPlayer.NickName)
+        {
+            winnerTitleText.text = "You";
+        }
+        else
+        {
+            winnerTitleText.text = targetPlayer.NickName;
+        }
+    }
+
+    private void EndGame()
+    {
+        var gameManagerInstance =  GameManager.Instance;
+        gameManagerInstance.SetCursorState(false);
+        gameManagerInstance.isGamePausedOrOver = true;
+            
+        gameOverPopup.SetActive(true);
     }
 
     public void LeaveGame()
