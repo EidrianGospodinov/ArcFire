@@ -37,7 +37,14 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
     {
         if (targetPlayer.GetScore() == maxKills)
         {
-            winnerText.text = targetPlayer.NickName;
+            if (PhotonNetwork.NickName == targetPlayer.NickName)
+            {
+                winnerText.text = "You";
+            }
+            else
+            {
+                winnerText.text = targetPlayer.NickName;
+            }
             
             GameManager.Instance.SetCursorState(false);
             

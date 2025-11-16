@@ -74702,6 +74702,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 2.9087
       objectReference: {fileID: 0}
+    - target: {fileID: 2128670690422470615, guid: 04a25e3717de6324a9ccc7269a9824c1, type: 3}
+      propertyPath: m_Text
+      value: Won the game!
+      objectReference: {fileID: 0}
     - target: {fileID: 2826783307830726478, guid: 04a25e3717de6324a9ccc7269a9824c1, type: 3}
       propertyPath: m_LocalScale.x
       value: 2.9087
