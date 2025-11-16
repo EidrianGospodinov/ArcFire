@@ -74766,6 +74766,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 36
       objectReference: {fileID: 0}
+    - target: {fileID: 7497495152284138662, guid: 04a25e3717de6324a9ccc7269a9824c1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1009611967}
+    - target: {fileID: 7497495152284138662, guid: 04a25e3717de6324a9ccc7269a9824c1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: NewGame
+      objectReference: {fileID: 0}
     - target: {fileID: 8083513836188471574, guid: 04a25e3717de6324a9ccc7269a9824c1, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -126045,6 +126053,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1009611966}
   - component: {fileID: 1009611967}
+  - component: {fileID: 1009611968}
   m_Layer: 0
   m_Name: MultiplayerLevelManager
   m_TagString: Untagged
@@ -126084,6 +126093,28 @@ MonoBehaviour:
   maxKills: 3
   gameOverPopup: {fileID: 516645559}
   winnerText: {fileID: 516645560}
+--- !u!114 &1009611968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1009611965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 3
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!43 &1020211974
 Mesh:
   m_ObjectHideFlags: 0

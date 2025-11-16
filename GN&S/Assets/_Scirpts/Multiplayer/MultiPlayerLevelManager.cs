@@ -45,4 +45,32 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
     {
         SceneManager.LoadScene("Lobby");
     }
+    public void NewGame()
+    {
+        //clean up the scene
+        PhotonNetwork.DestroyAll();
+        
+        //disable ui for all players
+        photonView.RPC("DisableGameOverUI", RpcTarget.All);
+
+
+        if (PhotonNetwork.CurrentRoom.PlayerCount >= 2)
+        {
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.CurrentRoom.IsVisible = false;
+            PhotonNetwork.LoadLevel("Multiplayer");
+        }
+        else
+        {
+            Debug.LogWarning("Not enough players to restart.");
+        }
+    }
+    [PunRPC]
+    private void DisableGameOverUI()
+    {
+        if (gameOverPopup != null)
+        {
+            gameOverPopup.SetActive(false);
+        }
+    }
 }
