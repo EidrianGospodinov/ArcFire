@@ -18,10 +18,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        throw new NotImplementedException();
-    }
+    
 
     public void SetCursorState(bool isGameMode)
     {
