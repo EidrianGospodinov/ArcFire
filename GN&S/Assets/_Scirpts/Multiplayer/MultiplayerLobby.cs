@@ -27,6 +27,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
 
     private string playerName;
     private Dictionary<string, RoomInfo> cachedRoomList;
+    private bool canPlaySolo = false;
 
 
     private void Start()
@@ -39,9 +40,20 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     }
     public void StartGameClicked()
     {
-        PhotonNetwork.CurrentRoom.IsOpen = false;
-        PhotonNetwork.CurrentRoom.IsVisible = false;
-        PhotonNetwork.LoadLevel("Multiplayer");
+        if (PhotonNetwork.PlayerList.Length >= 2 || canPlaySolo)
+        {
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.CurrentRoom.IsVisible = false;
+            PhotonNetwork.LoadLevel("Multiplayer");
+        }
+        else
+        {
+            Debug.Log("Not Enough players");
+        }
+
+        {
+            
+        }
     }
     public void UpdateCachedRoomList(List<RoomInfo> roomList)
     {
@@ -259,6 +271,11 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     {
         base.OnMasterClientSwitched(newMasterClient);
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+    }
+
+    public void CanPlaySoloClicked(bool isToggleOn)
+    {
+        canPlaySolo = isToggleOn;
     }
     
 }
