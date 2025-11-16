@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -28,4 +29,5 @@ public class GameManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.Confined;
         }
     }
+    public List<GameObject> PlayersInGame = new List<GameObject>();
 }

@@ -1,3 +1,4 @@
+using System.Linq;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +17,20 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        PhotonNetwork.Instantiate("MultiPlayerPref", playerTransform.position, Quaternion.identity);
+        GameManager.Instance.PlayersInGame.Add(
+            PhotonNetwork.Instantiate("MultiPlayerPref", playerTransform.position, Quaternion.identity));
+    }
+
+    void OnEnable()
+    {
+        base.OnEnable();
+        Debug.Log("OnEnable");
+    }
+
+    void OnDisable()
+    {
+        base.OnDisable();
+        Debug.Log("OnDisable");
     }
     
     public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
@@ -49,6 +63,8 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
     {
         //clean up the scene
         PhotonNetwork.DestroyAll();
+        GameManager.Instance.PlayersInGame.ForEach(PhotonNetwork.Destroy);
+        GameManager.Instance.PlayersInGame.Clear();
         
         //disable ui for all players
         photonView.RPC("DisableGameOverUI", RpcTarget.All);
@@ -58,7 +74,8 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;
-            PhotonNetwork.LoadLevel("Multiplayer");
+            PhotonNetwork.LoadLevel("TransitionScene");
+            //PhotonNetwork.LoadLevel("Multiplayer");
         }
         else
         {
