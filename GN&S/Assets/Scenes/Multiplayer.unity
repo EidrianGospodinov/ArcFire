@@ -262052,15 +262052,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5139813310185122860, guid: 768bef70a3152a544ac9acae4e92fd65, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.46
+      value: 3.2
       objectReference: {fileID: 0}
     - target: {fileID: 5139813310185122860, guid: 768bef70a3152a544ac9acae4e92fd65, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.7838927
+      value: 1.7181209
       objectReference: {fileID: 0}
     - target: {fileID: 5139813310185122860, guid: 768bef70a3152a544ac9acae4e92fd65, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.7838927
+      value: 1.7181209
       objectReference: {fileID: 0}
     - target: {fileID: 5139813310185122860, guid: 768bef70a3152a544ac9acae4e92fd65, type: 3}
       propertyPath: m_LocalPosition.x
@@ -262092,11 +262092,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5139813310185122860, guid: 768bef70a3152a544ac9acae4e92fd65, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -313
+      value: -900.6
       objectReference: {fileID: 0}
     - target: {fileID: 5139813310185122860, guid: 768bef70a3152a544ac9acae4e92fd65, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -134
+      value: -421
       objectReference: {fileID: 0}
     - target: {fileID: 5139813310185122860, guid: 768bef70a3152a544ac9acae4e92fd65, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -262109,6 +262109,10 @@ PrefabInstance:
     - target: {fileID: 5139813310185122860, guid: 768bef70a3152a544ac9acae4e92fd65, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5139813310185122860, guid: 768bef70a3152a544ac9acae4e92fd65, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8503688041165425942, guid: 768bef70a3152a544ac9acae4e92fd65, type: 3}
@@ -289167,9 +289171,9 @@ MonoBehaviour:
   playerShotSound: {fileID: 8300000, guid: 9d685be7bcccd974bb6312c9965ff4e5, type: 3}
   bulletFiringEffect: {fileID: 1000011513120438, guid: f70d27f5cf28c8941bbfd6febd74797f, type: 3}
   bulletDamage: 10
+  maxHealth: 100
   moveSpeed: 5
   rotationSmoothTime: 0.05
-  health: 100
   weaponAimPivot: {fileID: 0}
   verticalAimSpeed: 50
   maxAimAngle: 80
