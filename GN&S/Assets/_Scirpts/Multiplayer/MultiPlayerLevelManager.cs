@@ -12,7 +12,7 @@ using UnityEngine.Serialization;
 
 public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
 {
-    [SerializeField] Transform playerTransform;
+    Transform playerTransform;
     [SerializeField] private Timer timer;
 
     public int maxKills = 3;
@@ -24,12 +24,41 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        GameManager.Instance.PlayersInGame.Add(
-            PhotonNetwork.Instantiate("MultiPlayerPref", playerTransform.position, Quaternion.identity));
-
+        var playerList = PhotonNetwork.PlayerList;
+        var localPlayer = PhotonNetwork.LocalPlayer;
+        
+        int localIndex = Array.IndexOf(playerList, localPlayer);
+        var gameManagerInstance = GameManager.Instance;
+        gameManagerInstance.PlayersInGame.Add(
+            PhotonNetwork.Instantiate("MultiPlayerPref", 
+                gameManagerInstance.PlayerTransformsArr[localIndex].position, Quaternion.identity));
+        
+        //InitPlayerSetSpawnPoint();
+        
         timer.OnTimerComplete += OnGameTimerFinished;
         timer.StartTimer();
 
+    }
+
+    private void InitPlayerSetSpawnPoint()
+    {
+        //did not work due to sync issues
+        var playerTransforms = GameManager.Instance.PlayerTransforms;
+        for (int i =0; i<playerTransforms.Count;i++)
+        {
+            if (playerTransforms[i].isUsed == false)
+            {
+                GameManager.Instance.PlayersInGame.Add(
+                    PhotonNetwork.Instantiate("MultiPlayerPref", playerTransforms[i].location.position, Quaternion.identity));
+
+                PlayerTransformDict currentPlayerTransformDict = playerTransforms[i];
+                currentPlayerTransformDict.isUsed = true;
+
+                playerTransforms[i] = currentPlayerTransformDict;
+                Debug.LogError(currentPlayerTransformDict.location.name);
+                break;
+            }
+        }
     }
 
     private void OnDestroy()

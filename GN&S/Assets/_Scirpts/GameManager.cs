@@ -2,9 +2,18 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public struct PlayerTransformDict
+{//no longer needed
+    public Transform location;
+    public bool isUsed;
+}
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+    [SerializeField] public Transform[] PlayerTransformsArr;
+    [SerializeField] public List<PlayerTransformDict> PlayerTransforms;//no longer needed
     private void Awake()
     {
         if (Instance != null && Instance != this)
