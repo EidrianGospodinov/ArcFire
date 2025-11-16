@@ -45,8 +45,9 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
             {
                 winnerText.text = targetPlayer.NickName;
             }
-            
-            GameManager.Instance.SetCursorState(false);
+            var gameManagerInstance =  GameManager.Instance;
+            gameManagerInstance.SetCursorState(false);
+            gameManagerInstance.isGamePausedOrOver = true;
             
             gameOverPopup.SetActive(true);
         }

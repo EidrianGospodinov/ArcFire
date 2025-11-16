@@ -17,13 +17,9 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
     [SerializeField] int bulletDamage;
     [SerializeField] int maxHealth = 100;
     
-    
-    
-
     //public
     public float moveSpeed = 5f; 
     public float rotationSmoothTime = 0.05f; 
-    private float rotationVelocity;
     
     public Transform weaponAimPivot; 
     public float verticalAimSpeed = 50f;
@@ -31,6 +27,7 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
     public float minAimAngle = -45f;    
     
     //private
+    private float rotationVelocity;
     private int health = 100;
     private Rigidbody rb; 
     private float nextFire = 0f;
@@ -43,7 +40,7 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
     // Start is called before the first frame update
     void Start()
     {
-        GameManager.Instance.SetCursorState(false);
+        GameManager.Instance.SetCursorState(true);
         
         rb = GetComponent<Rigidbody>();
         photonView = GetComponent<PhotonView>();
@@ -69,6 +66,10 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
 
     private void Update()
     {
+        if (GameManager.Instance.isGamePausedOrOver)
+        {
+            return;
+        }
         if (!photonView.IsMine)
         {
             return;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,12 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
     }
+
+    private void Update()
+    {
+        throw new NotImplementedException();
+    }
+
     public void SetCursorState(bool isGameMode)
     {
         if (isGameMode)
@@ -30,4 +37,6 @@ public class GameManager : MonoBehaviour
         }
     }
     public List<GameObject> PlayersInGame = new List<GameObject>();
+    
+    public bool isGamePausedOrOver = false;
 }
