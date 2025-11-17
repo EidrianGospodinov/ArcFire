@@ -106,32 +106,30 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
     }
     private void HandleWeaponAimInput()
     {
-        if (weaponAimPivot == null) return;
-    
+        if (weaponAimPivot == null)
+        {
+            return;
+        }
         float input = 0f;
-
-        // Check for Q (Aim Up)
+        // Aim Up
         if (Input.GetKey(KeyCode.Q))
         {
             input = 1f;
         }
-        // Check for E (Aim Down)
+        // Aim Down
         else if (Input.GetKey(KeyCode.E))
         {
             input = -1f;
         }
-
         if (input != 0)
         {
-            // 1. Calculate the change in vertical aim based on input and time
+            //Calculate the change in vertical aim based on input and time
             currentVerticalAim += input * verticalAimSpeed * Time.deltaTime;
         
-            // 2. Clamp the angle to prevent the weapon from rotating too far
+            //Clamp the angle to prevent the weapon from rotating too far
             currentVerticalAim = Mathf.Clamp(currentVerticalAim, minAimAngle, maxAimAngle);
         }
-    
-        // 3. Apply the stored angle to the weapon pivot's local rotation
-        // We only change the X-axis (pitch).
+        //Apply the stored angle to the weapon pivot's local rotation
         weaponAimPivot.localRotation = Quaternion.Euler(currentVerticalAim, 0f, 0f);
     }
     private void OldFire()
@@ -192,7 +190,8 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
         var movement = transform.forward * Time.deltaTime;
         rb.MovePosition(rb.position + movement);
     }
-     void OnCollisionEnter(Collision collision)
+
+    void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Bullet"))
         {

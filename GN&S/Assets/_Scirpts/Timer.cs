@@ -18,7 +18,6 @@ public class Timer : MonoBehaviour
         timeRemaining = timerTotalTime;
         text = GetComponent<Text>();
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -26,9 +25,7 @@ public class Timer : MonoBehaviour
         {
             if (timeRemaining > 0)
             {
-                // Decrease time by the amount passed since the last frame
                 timeRemaining -= Time.deltaTime; 
-                
                 DisplayTime(timeRemaining);
             }
             else
@@ -42,17 +39,12 @@ public class Timer : MonoBehaviour
             }
         }
     }
-
-    // Converts seconds into a display format (e.g., 01:30)
     void DisplayTime(float timeToDisplay)
     {
-        // Math.Floor is used to handle floating point issues and ensure the number is positive
+        // Math.Floor keeps the number positive
         float minutes = Mathf.FloorToInt(timeToDisplay / 60);
         float seconds = Mathf.FloorToInt(timeToDisplay % 60);
-
-        // Formats the output with leading zeros (e.g., 01:05)
         text.text = $"{minutes:00}:{seconds:00}";
-        
     }
 
     void TimerComplete()

@@ -26,9 +26,6 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
     }
-
-    
-
     public void SetCursorState(bool isGameMode)
     {
         if (isGameMode)
@@ -43,6 +40,5 @@ public class GameManager : MonoBehaviour
         }
     }
     public List<GameObject> PlayersInGame = new List<GameObject>();
-    
     public bool isGamePausedOrOver = false;
 }
