@@ -7,13 +7,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
+using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
 {
-    Transform playerTransform;
     [SerializeField] private Timer timer;
+    [SerializeField] public Transform[] PlayerTransformsArr = new Transform[4];
+    Transform playerTransform;
 
     public int maxKills = 3;
 
@@ -31,7 +33,7 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
         var gameManagerInstance = GameManager.Instance;
         gameManagerInstance.PlayersInGame.Add(
             PhotonNetwork.Instantiate("MultiPlayerPref", 
-                gameManagerInstance.PlayerTransformsArr[localIndex].position, Quaternion.identity));
+                PlayerTransformsArr[localIndex].position, Quaternion.identity));
         
         //InitPlayerSetSpawnPoint();
         
@@ -132,6 +134,23 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
         {
             WinLoseTextUpdate(targetPlayer);
             EndGame();
+            StorePersonalBest();
+        }
+    }
+
+    void StorePersonalBest()
+    {
+        int currentScore = PhotonNetwork.LocalPlayer.GetScore();
+        PlayerData playerData = GameManager.Instance.playerData;
+        if (currentScore > playerData.bestScore)
+        {
+            playerData.username = PhotonNetwork.LocalPlayer.NickName;
+            playerData.bestScore = currentScore;
+            playerData.bestScoreDate = DateTime.UtcNow.ToString();
+            playerData.totalPlayerInGame = PhotonNetwork.CurrentRoom.PlayerCount;
+            playerData.roomName = PhotonNetwork.CurrentRoom.Name;
+            
+            GameManager.Instance.SavePlayerData();
         }
     }
 

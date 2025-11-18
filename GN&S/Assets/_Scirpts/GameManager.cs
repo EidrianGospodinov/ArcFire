@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using Leguar.TotalJSON;
 using UnityEngine;
 
 [System.Serializable]
@@ -12,7 +14,11 @@ public struct PlayerTransformDict
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    [SerializeField] public Transform[] PlayerTransformsArr;
+    public PlayerData playerData;
+    public string filePath;
+    
+    
+   // [SerializeField] public Transform[] PlayerTransformsArr = new Transform[4];//load them from the level manager in the future
     [SerializeField] public List<PlayerTransformDict> PlayerTransforms;//no longer needed
     private void Awake()
     {
@@ -25,6 +31,28 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+    }
+
+    private void Start()
+    {
+        LoadPlayerData();
+    }
+
+    public void SavePlayerData()
+    {
+        string serialisedDataString = JSON.Serialize(playerData).CreateString();
+        File.WriteAllText(filePath, serialisedDataString);
+    }
+
+    public void LoadPlayerData()
+    {
+        if(!File.Exists(filePath))
+        {
+            playerData = new PlayerData();
+            SavePlayerData();
+        }
+        string fileContents = File.ReadAllText(filePath);
+        playerData = JSON.ParseString(fileContents).Deserialize<PlayerData>();
     }
     public void SetCursorState(bool isGameMode)
     {

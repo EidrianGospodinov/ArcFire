@@ -126190,6 +126190,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timer: {fileID: 1673416858}
+  PlayerTransformsArr:
+  - {fileID: 878772851}
+  - {fileID: 884967999}
+  - {fileID: 1207562313}
+  - {fileID: 963216247}
   maxKills: 3
   gameOverPopup: {fileID: 516645559}
   winnerTitleText: {fileID: 516645560}
@@ -276980,7 +276985,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1972331919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -276993,11 +276998,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56267f36741e0a44293a8d5354c2c410, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerTransformsArr:
-  - {fileID: 878772851}
-  - {fileID: 884967999}
-  - {fileID: 1207562313}
-  - {fileID: 963216247}
+  filePath: 
   PlayerTransforms:
   - location: {fileID: 878772851}
     isUsed: 0
