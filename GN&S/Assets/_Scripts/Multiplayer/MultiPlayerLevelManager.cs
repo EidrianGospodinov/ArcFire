@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using _Scripts.Multiplayer;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,6 +24,11 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
     public Text winnerTitleText;
 
     public Text winnerBodyText;
+
+    [Header("Chat")] 
+    [SerializeField] private Transform chatPanel;
+
+    public Chat chat;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -39,9 +45,38 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
         
         timer.OnTimerComplete += OnGameTimerFinished;
         timer.StartTimer();
-
+        
+        chatPanel.gameObject.SetActive(true);
+        
+        var authenticationValues = new Photon.Chat.AuthenticationValues(PhotonNetwork.LocalPlayer.NickName);
+        chat.userName = PhotonNetwork.LocalPlayer.NickName;
+        chat.ChatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, "1.0", authenticationValues);
     }
 
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("joned room");
+        base.OnJoinedRoom();
+    }
+    public override void OnLeftRoom()
+    {
+        PhotonNetwork.Disconnect();
+        chat.ChatClient.Disconnect();
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        SceneManager.LoadScene("Lobby");
+    }
+    public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        if (targetPlayer.GetScore() == maxKills)
+        {
+            WinLoseTextUpdate(targetPlayer);
+            EndGame();
+            StorePersonalBest();
+        }
+    }
     private void InitPlayerSetSpawnPoint()
     {
         //did not work due to sync issues
@@ -128,15 +163,7 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
     }
 
 
-    public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
-    {
-        if (targetPlayer.GetScore() == maxKills)
-        {
-            WinLoseTextUpdate(targetPlayer);
-            EndGame();
-            StorePersonalBest();
-        }
-    }
+    
 
     void StorePersonalBest()
     {
@@ -180,28 +207,20 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
     }
 
-    public override void OnLeftRoom()
-    {
-        PhotonNetwork.Disconnect();
-    }
-
-    public override void OnDisconnected(DisconnectCause cause)
-    {
-        SceneManager.LoadScene("Lobby");
-    }
+    
     public void NewGame()
     {
         //clean up the scene
-        PhotonNetwork.DestroyAll();
-        GameManager.Instance.PlayersInGame.ForEach(PhotonNetwork.Destroy);
-        GameManager.Instance.PlayersInGame.Clear();
-        
-        //disable ui for all players
-        photonView.RPC("DisableGameOverUI", RpcTarget.All);
-
-
         if (PhotonNetwork.CurrentRoom.PlayerCount >= 2)
         {
+            PhotonNetwork.DestroyAll();
+            GameManager.Instance.PlayersInGame.ForEach(PhotonNetwork.Destroy);
+            GameManager.Instance.PlayersInGame.Clear();
+
+            //disable ui for all players
+            photonView.RPC("DisableGameOverUI", RpcTarget.All);
+
+
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;
             PhotonNetwork.LoadLevel("TransitionScene");

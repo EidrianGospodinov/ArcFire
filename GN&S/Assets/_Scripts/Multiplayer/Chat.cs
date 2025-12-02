@@ -13,7 +13,8 @@ namespace _Scripts.Multiplayer
         public ChatClient ChatClient;
         public InputField InputField;
         public Text ChatContent;
-        void Start()
+        private bool isInputFieldToggled;
+        void Awake()
         {
             ChatClient = new ChatClient(this);
         }
@@ -22,6 +23,33 @@ namespace _Scripts.Multiplayer
         void Update()
         {
             ChatClient.Service();
+
+
+
+            if(Input.GetKeyDown(KeyCode.T) && !isInputFieldToggled)
+            {
+                isInputFieldToggled = true;
+                InputField.Select();
+                InputField.ActivateInputField();
+
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape) && isInputFieldToggled)
+            {
+
+                isInputFieldToggled = false;
+
+                UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+
+            }
+
+
+            if ((Input.GetKeyDown(KeyCode.Return))||(Input.GetKeyDown(KeyCode.KeypadEnter)) && isInputFieldToggled)
+            {
+                SetMessage();
+            }
+
+
         }
 
         public void DebugReturn(DebugLevel level, string message)
@@ -62,6 +90,7 @@ namespace _Scripts.Multiplayer
 
         public void OnSubscribed(string[] channels, bool[] results)
         {
+            Debug.LogError("onSubscribe");
             for (int i = 0; i < channels.Length; i++)
             {
                 if (results[i])
@@ -74,6 +103,7 @@ namespace _Scripts.Multiplayer
 
         public void OnUnsubscribed(string[] channels)
         {
+            Debug.LogError("onUNSubscribe");
             for (int i = 0; i < channels.Length; i++)
             {
                 Debug.Log($"Chat - unsubscribed to {channels[i]} channels");
@@ -101,7 +131,10 @@ namespace _Scripts.Multiplayer
             }
 
             ChatClient.PublishMessage(PhotonNetwork.CurrentRoom.Name, InputField.text);
-            InputField.text = ""; 
+            InputField.text = "";
+            isInputFieldToggled = false;
+            
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
         }
     }
 }
