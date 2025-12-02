@@ -2,7 +2,9 @@ using NUnit.Framework;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
+using _Scripts.Multiplayer;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class MultiplayerLobby : MonoBehaviourPunCallbacks
@@ -14,6 +16,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     [SerializeField] Transform CreateRoomPanel;
     [SerializeField] Transform InsideRoomPanel;
     [SerializeField] Transform ListRoomsPanel;
+    [SerializeField] Transform ChatPanel;
 
     [SerializeField] InputField roomNameInput;
     [SerializeField] InputField playerNameInput;
@@ -28,6 +31,9 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     private string playerName;
     private Dictionary<string, RoomInfo> cachedRoomList;
     private bool canPlaySolo = false;
+
+
+    public Chat chat;
 
 
     private void Start()
@@ -99,11 +105,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     }
     public void ActivatePanel(string panelName)
     {
-        LoginPanel.gameObject.SetActive(false);
-        SelectionPanel.gameObject.SetActive(false);
-        CreateRoomPanel.gameObject.SetActive(false);
-        InsideRoomPanel.gameObject.SetActive(false);
-        ListRoomsPanel.gameObject.SetActive(false);
+        DisableAllPanels();
 
         if (panelName == LoginPanel.gameObject.name)
             LoginPanel.gameObject.SetActive(true);
@@ -115,7 +117,21 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
             InsideRoomPanel.gameObject.SetActive(true);
         else if (panelName == ListRoomsPanel.gameObject.name)
             ListRoomsPanel.gameObject.SetActive(true);
+        else if (panelName == ChatPanel.gameObject.name)
+            ChatPanel.gameObject.SetActive(true);
     }
+
+    private void DisableAllPanels()
+    {
+        LoginPanel.gameObject.SetActive(false);
+        SelectionPanel.gameObject.SetActive(false);
+        CreateRoomPanel.gameObject.SetActive(false);
+        InsideRoomPanel.gameObject.SetActive(false);
+        ListRoomsPanel.gameObject.SetActive(false);
+        ChatPanel.gameObject.SetActive(false);
+    }
+        
+    
     public void DisconnectButtonClicked()
     {
         PhotonNetwork.Disconnect();
@@ -146,6 +162,10 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
+        var authenticationValues = new Photon.Chat.AuthenticationValues(PhotonNetwork.LocalPlayer.NickName);
+        chat.userName = PhotonNetwork.LocalPlayer.NickName;
+        chat.ChatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, "1.0", authenticationValues);
+        
         print("joined room!");
         ActivatePanel("InsideRoom");
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
@@ -193,12 +213,9 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         base.OnLeftRoom();
+        chat.ChatClient.Disconnect();
         print("left from this room!");
-
-        /*var playerTextGameObject = PlayerList.Find(x => x.GetComponent<Text>().text == this.playerName);
         
-        PlayerList.Remove(playerTextGameObject);
-        Destroy(playerTextGameObject);*/
 
         DestroyChildren(insideRoomPlayerList);
 
