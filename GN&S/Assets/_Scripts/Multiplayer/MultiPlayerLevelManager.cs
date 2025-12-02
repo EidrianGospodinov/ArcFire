@@ -14,7 +14,7 @@ using UnityEngine.Serialization;
 
 public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private Timer timer;
+    [SerializeField] public Timer timer;
     [SerializeField] public Transform[] PlayerTransformsArr = new Transform[4];
     Transform playerTransform;
 

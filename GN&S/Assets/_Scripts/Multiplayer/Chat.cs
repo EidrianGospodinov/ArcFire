@@ -18,6 +18,7 @@ namespace _Scripts.Multiplayer
         
         [Header("necessary dependency for the command Dispatcher")]
         private CommandDispatcher dispatcher;
+        private MultiPlayerLevelManager multiPlayerLevelManager;
         void Awake()
         {
             ChatClient = new ChatClient(this);
@@ -25,10 +26,13 @@ namespace _Scripts.Multiplayer
 
         private void Start()
         {
-            dispatcher = new CommandDispatcher(multiPlayerLevelManager);
-
-
+            multiPlayerLevelManager = FindFirstObjectByType<MultiPlayerLevelManager>();
             
+            
+            
+            
+            
+            dispatcher = new CommandDispatcher(multiPlayerLevelManager);
         }
 
         // Update is called once per frame
@@ -69,7 +73,6 @@ namespace _Scripts.Multiplayer
                 else
                 {
                     SetMessage();
-                    
                 }
             }
 
@@ -79,7 +82,7 @@ namespace _Scripts.Multiplayer
         private void HandleCommand(string message)
         {
             string result = dispatcher.Dispatch(message);
-            
+            CleanupInputField();
         }
 
         public void DebugReturn(DebugLevel level, string message)
@@ -161,6 +164,11 @@ namespace _Scripts.Multiplayer
             }
 
             ChatClient.PublishMessage(PhotonNetwork.CurrentRoom.Name, InputField.text);
+            CleanupInputField();
+        }
+
+        private void CleanupInputField()
+        {
             InputField.text = "";
             isInputFieldToggled = false;
             

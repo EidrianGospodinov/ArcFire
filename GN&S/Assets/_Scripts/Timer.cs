@@ -61,4 +61,9 @@ public class Timer : MonoBehaviour
     {
         timerIsRunning = false;
     }
+
+    public void UpdateTimer(float time)
+    {
+        timeRemaining = time;
+    }
 }

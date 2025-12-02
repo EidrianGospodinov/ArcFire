@@ -7,13 +7,14 @@ namespace _Scripts.Multiplayer
     public interface IGameCommand
     {
         string Name { get; }
-        string Execute(string[] args); 
+        string Execute(CommandContext commandContext, string[] args); 
     }
     #region Commands
     public class HealCommand : IGameCommand
     {
         public string Name => "heal";
-        public string Execute(string[] args)
+        
+        public string Execute(CommandContext commandContext, string[] args)
         {
             Debug.Log("Health set to 100!"); 
             return "You have been fully healed!";
@@ -22,16 +23,25 @@ namespace _Scripts.Multiplayer
     public class TimeCommand : IGameCommand
     {
         public string Name => "time";
-        public string Execute(string[] args)
+        public string Execute(CommandContext commandContext, string[] args)
         {
-            Debug.Log("Set time to: "+ args[0]);
-            return $"time set to {args[0]}";
+            var value = args[0];
+            if (float.TryParse(value, out float result))
+            {
+                commandContext.LevelManager.timer.UpdateTimer(result);
+                Debug.Log("Set time to: " + args[0]);
+                return $"time set to {args[0]}";
+            }
+
+            return "Invalid data used";
+
+
         }
     }
     public class QuitCommand : IGameCommand
     {
         public string Name => "quit";
-        public string Execute(string[] args)
+        public string Execute(CommandContext commandContext, string[] args)
         {
             Debug.Log("quit game"); 
             return "Quitting game";
@@ -41,8 +51,10 @@ namespace _Scripts.Multiplayer
     public class CommandDispatcher
     {
         private Dictionary<string, IGameCommand> commands = new Dictionary<string, IGameCommand>();
+        CommandContext context;
         public CommandDispatcher(MultiPlayerLevelManager multiPlayerLevelManager)
         {
+            context = new CommandContext(multiPlayerLevelManager);
             RegisterCommand(new HealCommand());
             RegisterCommand(new TimeCommand());
         }
@@ -63,7 +75,7 @@ namespace _Scripts.Multiplayer
 
             if (commands.TryGetValue(commandName, out IGameCommand command))
             {
-                return command.Execute(args);
+                return command.Execute(context,args);
             }
             else
             {
