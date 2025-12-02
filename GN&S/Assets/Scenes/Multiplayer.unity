@@ -154056,6 +154056,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3180668908962373052, guid: 605ec2aa1e6669843af61de45ecbed1d, type: 3}
+      propertyPath: m_Text
+      value: Press T to chat and Enter to send
+      objectReference: {fileID: 0}
     - target: {fileID: 3180668908979037089, guid: 605ec2aa1e6669843af61de45ecbed1d, type: 3}
       propertyPath: m_SizeDelta.x
       value: -1785.0315
@@ -154079,6 +154083,10 @@ PrefabInstance:
     - target: {fileID: 3180668908979037091, guid: 605ec2aa1e6669843af61de45ecbed1d, type: 3}
       propertyPath: m_Color.r
       value: 0.38679248
+      objectReference: {fileID: 0}
+    - target: {fileID: 3180668908979037094, guid: 605ec2aa1e6669843af61de45ecbed1d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3180668909006586443, guid: 605ec2aa1e6669843af61de45ecbed1d, type: 3}
       propertyPath: m_IsActive
@@ -154203,6 +154211,10 @@ PrefabInstance:
     - target: {fileID: 3180668909594068994, guid: 605ec2aa1e6669843af61de45ecbed1d, type: 3}
       propertyPath: m_AnchorMin.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3180668909646294967, guid: 605ec2aa1e6669843af61de45ecbed1d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
