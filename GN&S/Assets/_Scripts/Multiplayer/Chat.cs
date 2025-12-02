@@ -1,3 +1,4 @@
+using System;
 using ExitGames.Client.Photon;
 using Photon.Chat;
 using Photon.Pun;
@@ -14,9 +15,20 @@ namespace _Scripts.Multiplayer
         public InputField InputField;
         public Text ChatContent;
         private bool isInputFieldToggled;
+        
+        [Header("necessary dependency for the command Dispatcher")]
+        private CommandDispatcher dispatcher;
         void Awake()
         {
             ChatClient = new ChatClient(this);
+        }
+
+        private void Start()
+        {
+            dispatcher = new CommandDispatcher(multiPlayerLevelManager);
+
+
+            
         }
 
         // Update is called once per frame
@@ -46,10 +58,28 @@ namespace _Scripts.Multiplayer
 
             if ((Input.GetKeyDown(KeyCode.Return))||(Input.GetKeyDown(KeyCode.KeypadEnter)) && isInputFieldToggled)
             {
-                SetMessage();
+                if (InputField.text.StartsWith("/"))
+                {
+                    var text = InputField.text.Substring(1);
+                    if (text != "")
+                    { 
+                        HandleCommand(InputField.text.Substring(1));
+                    }
+                }
+                else
+                {
+                    SetMessage();
+                    
+                }
             }
 
 
+        }
+
+        private void HandleCommand(string message)
+        {
+            string result = dispatcher.Dispatch(message);
+            
         }
 
         public void DebugReturn(DebugLevel level, string message)
