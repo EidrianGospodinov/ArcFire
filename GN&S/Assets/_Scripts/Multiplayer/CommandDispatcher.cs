@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Photon.Pun;
 using UnityEngine;
 
 namespace _Scripts.Multiplayer
@@ -47,6 +48,24 @@ namespace _Scripts.Multiplayer
             return "Quitting game";
         }
     }
+    public class KickCommand : IGameCommand
+    {
+        public string Name => "kick";
+        public string Execute(CommandContext commandContext, string[] args)
+        {
+            foreach (var player in GameManager.Instance.PlayersInGame)
+            {
+               var multiplayer = player.GetComponent<MultyPlayer>();
+               if (args[0] == multiplayer.name)
+               {
+                   PhotonNetwork.CloseConnection(multiplayer.PV.Owner);
+               }
+                
+            }
+            Debug.Log("quit game"); 
+            return "Quitting game";
+        }
+    }
     #endregion
     public class CommandDispatcher
     {
@@ -57,6 +76,8 @@ namespace _Scripts.Multiplayer
             context = new CommandContext(multiPlayerLevelManager);
             RegisterCommand(new HealCommand());
             RegisterCommand(new TimeCommand());
+            RegisterCommand(new KickCommand());
+            RegisterCommand(new QuitCommand());
         }
 
         private void RegisterCommand(IGameCommand command)

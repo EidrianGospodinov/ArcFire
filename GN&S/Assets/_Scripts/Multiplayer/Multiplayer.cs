@@ -34,6 +34,7 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
 
     private UiHealthBar mainHealthbar;
     private PhotonView photonView;
+    public PhotonView PV => photonView;
     
     private float currentVerticalAim = 0f;
 
