@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using _Scripts.Multiplayer;
 using Leguar.TotalJSON;
 using UnityEngine;
 
@@ -47,8 +48,15 @@ public class GameManager : MonoBehaviour
         byte[] jsonBytes = Encoding.UTF8.GetBytes(serialisedDataString);
         var base64String = Convert.ToBase64String(jsonBytes);
         
+        //Encrypt the base 64 string with AES
+        var inputBytes = Encoding.UTF8.GetBytes(base64String);
+        var encryptedBytes = DataSecurity.Encrypt(inputBytes);
         
-        File.WriteAllText(filePath, base64String);
+        //convert the encrypted bytes to base64 string
+        string finalEncryptedString = Convert.ToBase64String(encryptedBytes);
+        
+        
+        File.WriteAllText(filePath, finalEncryptedString);
     }
 
     public void LoadPlayerData()
@@ -62,9 +70,15 @@ public class GameManager : MonoBehaviour
         string fileContents = File.ReadAllText(filePath);
 
         //we are converting the data the opposite to bite and then to the original value
-        var jsonBytes = Convert.FromBase64String(fileContents);
+        var encryptedBytes = Convert.FromBase64String(fileContents);
 
-        var jsonString = Encoding.UTF8.GetString(jsonBytes);
+        var decryptedBytes = DataSecurity.Decrypt(encryptedBytes);
+
+
+        string base64String = Encoding.UTF8.GetString(decryptedBytes);
+
+        var jsonBytes = Convert.FromBase64String(base64String);
+        string jsonString = Encoding.UTF8.GetString(jsonBytes);
         
         playerData = JSON.ParseString(jsonString).Deserialize<PlayerData>();
         
@@ -84,4 +98,35 @@ public class GameManager : MonoBehaviour
     }
     public List<GameObject> PlayersInGame = new List<GameObject>();
     public bool isGamePausedOrOver = false;
+    
+    
+    // Used to delete the data from the inspector
+    [ContextMenu("DELETE Saved Player Data")]
+    public void DeletePlayerData()
+    {
+        if (File.Exists(filePath))
+        {
+            try
+            {
+                File.Delete(filePath);
+                Debug.Log($"Player data successfully deleted from: {filePath}");
+            }
+            catch (IOException e)
+            {
+                Debug.LogError($"Error deleting data file (IOException): {e.Message}");
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Debug.LogError($"Error deleting data file (Permission Denied): {e.Message}");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An unknown error occurred while deleting the data: {e.Message}");
+            }
+        }
+        else
+        {
+            Debug.Log($"No player data file found to delete at: {filePath}");
+        }
+    }
 }

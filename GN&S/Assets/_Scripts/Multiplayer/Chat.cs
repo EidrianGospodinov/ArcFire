@@ -123,7 +123,7 @@ namespace _Scripts.Multiplayer
 
         public void OnSubscribed(string[] channels, bool[] results)
         {
-            Debug.LogError("onSubscribe");
+            Debug.Log("onSubscribe");
             for (int i = 0; i < channels.Length; i++)
             {
                 if (results[i])
