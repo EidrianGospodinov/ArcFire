@@ -37,9 +37,9 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
         
         int localIndex = Array.IndexOf(playerList, localPlayer);
         var gameManagerInstance = GameManager.Instance;
-        gameManagerInstance.PlayersInGame.Add(
-            PhotonNetwork.Instantiate("MultiPlayerPref", 
-                PlayerTransformsArr[localIndex].position, Quaternion.identity));
+
+        PhotonNetwork.Instantiate("MultiPlayerPref",
+            PlayerTransformsArr[localIndex].position, Quaternion.identity);
         
         //InitPlayerSetSpawnPoint();
         
@@ -80,26 +80,7 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
             StorePersonalBest();
         }
     }
-    private void InitPlayerSetSpawnPoint()
-    {
-        //did not work due to sync issues
-        var playerTransforms = GameManager.Instance.PlayerTransforms;
-        for (int i =0; i<playerTransforms.Count;i++)
-        {
-            if (playerTransforms[i].isUsed == false)
-            {
-                GameManager.Instance.PlayersInGame.Add(
-                    PhotonNetwork.Instantiate("MultiPlayerPref", playerTransforms[i].location.position, Quaternion.identity));
-
-                PlayerTransformDict currentPlayerTransformDict = playerTransforms[i];
-                currentPlayerTransformDict.isUsed = true;
-
-                playerTransforms[i] = currentPlayerTransformDict;
-                Debug.LogError(currentPlayerTransformDict.location.name);
-                break;
-            }
-        }
-    }
+    
 
     private void OnDestroy()
     {
@@ -217,8 +198,7 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.CurrentRoom.PlayerCount >= 2)
         {
             PhotonNetwork.DestroyAll();
-            GameManager.Instance.PlayersInGame.ForEach(PhotonNetwork.Destroy);
-            GameManager.Instance.PlayersInGame.Clear();
+            
 
             //disable ui for all players
             photonView.RPC("DisableGameOverUI", RpcTarget.All);

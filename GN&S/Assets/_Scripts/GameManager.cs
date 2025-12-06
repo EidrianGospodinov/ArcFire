@@ -97,7 +97,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             Cursor.lockState = CursorLockMode.Confined;
         }
     }
-    public List<GameObject> PlayersInGame = new List<GameObject>();
     public bool isGamePausedOrOver = false;
     
     
