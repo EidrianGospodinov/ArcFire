@@ -38,9 +38,17 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
     
     private float currentVerticalAim = 0f;
 
+    [Header("Allow player to be kicked")] 
+    [SerializeField]
+    private bool allowPlayersToBeKicked = true;
+
     // Start is called before the first frame update
     void Start()
     {
+        //Allow Players to be kicked
+        PhotonNetwork.EnableCloseConnection = allowPlayersToBeKicked;
+        
+        
         GameManager.Instance.SetCursorState(true);
         
         rb = GetComponent<Rigidbody>();

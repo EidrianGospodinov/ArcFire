@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using _Scripts.Multiplayer;
 using Leguar.TotalJSON;
+using Photon.Pun;
 using UnityEngine;
 
 [System.Serializable]
@@ -13,7 +14,7 @@ public struct PlayerTransformDict
     public bool isUsed;
 }
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPunCallbacks
 {
     public static GameManager Instance { get; private set; }
     public PlayerData playerData;
@@ -128,5 +129,22 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log($"No player data file found to delete at: {filePath}");
         }
+    }
+    public void RequestKick(Photon.Realtime.Player target)
+    {
+        photonView.RPC("RequestKickRPC", RpcTarget.MasterClient, target.ActorNumber);
+    }
+
+    [PunRPC]
+    void RequestKickRPC(int actorNumber, PhotonMessageInfo info)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        var target = PhotonNetwork.CurrentRoom.GetPlayer(actorNumber);
+        if (target == null)
+            return;
+
+        PhotonNetwork.CloseConnection(target);
     }
 }

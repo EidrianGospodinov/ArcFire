@@ -85,12 +85,11 @@ namespace _Scripts.Multiplayer
         public string Name => "kick";
         public string Execute(CommandContext commandContext, string[] args)
         {
-            foreach (var player in GameManager.Instance.PlayersInGame)
+            foreach (var player in PhotonNetwork.PlayerList)
             {
-               var multiplayer = player.GetComponent<MultyPlayer>();
-               if (args[0] == multiplayer.name)
+               if (args[0] == player.NickName)
                {
-                   PhotonNetwork.CloseConnection(multiplayer.PV.Owner);
+                   GameManager.Instance.RequestKick(player);
                }
                 
             }
