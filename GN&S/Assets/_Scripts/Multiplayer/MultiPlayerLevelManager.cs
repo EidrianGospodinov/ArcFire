@@ -44,7 +44,10 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
         //InitPlayerSetSpawnPoint();
         
         timer.OnTimerComplete += OnGameTimerFinished;
-        timer.StartTimer();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            timer.StartTimer();
+        }
         
         chatPanel.gameObject.SetActive(true);
         

@@ -29,7 +29,7 @@ namespace _Scripts.Multiplayer
             var value = args[0];
             if (float.TryParse(value, out float result))
             {
-                commandContext.LevelManager.timer.UpdateTimer(result);
+                commandContext.LevelManager.timer.RequestTimeChange(result);
                 Debug.Log("Set time to: " + args[0]);
                 return $"time set to {args[0]}";
             }
