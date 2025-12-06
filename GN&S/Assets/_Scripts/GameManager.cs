@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Leguar.TotalJSON;
 using UnityEngine;
 
@@ -41,7 +42,13 @@ public class GameManager : MonoBehaviour
     public void SavePlayerData()
     {
         string serialisedDataString = JSON.Serialize(playerData).CreateString();
-        File.WriteAllText(filePath, serialisedDataString);
+        
+        //convert JSON to binary array with utf-8
+        byte[] jsonBytes = Encoding.UTF8.GetBytes(serialisedDataString);
+        var base64String = Convert.ToBase64String(jsonBytes);
+        
+        
+        File.WriteAllText(filePath, base64String);
     }
 
     public void LoadPlayerData()
@@ -50,9 +57,17 @@ public class GameManager : MonoBehaviour
         {
             playerData = new PlayerData();
             SavePlayerData();
+            return;
         }
         string fileContents = File.ReadAllText(filePath);
-        playerData = JSON.ParseString(fileContents).Deserialize<PlayerData>();
+
+        //we are converting the data the opposite to bite and then to the original value
+        var jsonBytes = Convert.FromBase64String(fileContents);
+
+        var jsonString = Encoding.UTF8.GetString(jsonBytes);
+        
+        playerData = JSON.ParseString(jsonString).Deserialize<PlayerData>();
+        
     }
     public void SetCursorState(bool isGameMode)
     {
