@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using ExitGames.Client.Photon;
 using Photon.Chat;
 using Photon.Pun;
@@ -41,8 +42,15 @@ namespace _Scripts.Multiplayer
             ChatClient.Service();
 
 
-
-            if(Input.GetKeyDown(KeyCode.T) && !isInputFieldToggled)
+            if (isInputFieldToggled)
+            {
+                CloseChat();
+            }
+            else
+            {
+                OpenChat();
+            }
+            /*if(Input.GetKeyDown(KeyCode.T) && !isInputFieldToggled)
             {
                 isInputFieldToggled = true;
                 InputField.Select();
@@ -74,11 +82,65 @@ namespace _Scripts.Multiplayer
                 {
                     SetMessage();
                 }
-            }
+            }*/
 
 
         }
 
+        private void OpenChat()
+        {
+            if(Input.GetKeyDown(KeyCode.T))
+            {
+                isInputFieldToggled = true;
+                InputField.Select();
+                InputField.ActivateInputField();
+
+            }
+            else if (Input.GetKeyDown(KeyCode.Slash))
+            {
+                isInputFieldToggled = true;
+                InputField.text = "/";
+                InputField.Select();
+                InputField.ActivateInputField();
+                
+                //Select field automatically highlights the written text
+                //using coroutine we are moving the caret on the next frame to avoid that 
+                StartCoroutine(MoveTextEnd_NextFrame());
+            }
+            
+        }
+        IEnumerator MoveTextEnd_NextFrame()
+        {
+            yield return 0; // Skip the first frame in which this is called.
+            InputField.MoveTextEnd(false);
+        }
+        private void CloseChat()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+
+                isInputFieldToggled = false;
+
+                UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+
+            }
+
+            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                if (InputField.text.StartsWith("/"))
+                {
+                    var text = InputField.text.Substring(1);
+                    if (text != "")
+                    {
+                        HandleCommand(InputField.text.Substring(1));
+                    }
+                }
+                else
+                {
+                    SetMessage();
+                }
+            }
+        }
         private void HandleCommand(string message)
         {
             string result = dispatcher.Dispatch(message);
