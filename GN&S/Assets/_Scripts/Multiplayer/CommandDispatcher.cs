@@ -39,6 +39,38 @@ namespace _Scripts.Multiplayer
 
         }
     }
+    public class PauseCommand : IGameCommand
+    {
+        public string Name => "pause";
+        public string Execute(CommandContext commandContext, string[] args)
+        {
+            var value = args[0];
+            if (float.TryParse(value, out float result))
+            {
+                if (result == 0)
+                {
+                    commandContext.LevelManager.timer.StopTimer();
+                    Debug.Log("Stop time: " + args[0]);
+                    return $"Time Stopped {args[0]}";
+                }
+                else if (result == 1)
+                {
+                    commandContext.LevelManager.timer.StartTimer();
+                    Debug.Log("Start time: " + args[0]);
+                    return $"Time Started {args[0]}";
+                }
+                else
+                {
+                    return "Invalid data used";
+                }
+                
+            }
+
+            return "Invalid data used";
+
+
+        }
+    }
     public class QuitCommand : IGameCommand
     {
         public string Name => "quit";
@@ -78,6 +110,7 @@ namespace _Scripts.Multiplayer
             RegisterCommand(new TimeCommand());
             RegisterCommand(new KickCommand());
             RegisterCommand(new QuitCommand());
+            RegisterCommand(new PauseCommand());
         }
 
         private void RegisterCommand(IGameCommand command)
