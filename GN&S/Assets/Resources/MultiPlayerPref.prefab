@@ -481,6 +481,7 @@ MonoBehaviour:
   verticalAimSpeed: 50
   maxAimAngle: 80
   minAimAngle: -45
+  allowPlayersToBeKicked: 1
 --- !u!114 &1093686655966019431
 MonoBehaviour:
   m_ObjectHideFlags: 0

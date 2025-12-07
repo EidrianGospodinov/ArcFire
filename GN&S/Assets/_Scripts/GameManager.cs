@@ -90,11 +90,13 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
+            isGamePausedOrOver = false;
         }
         else
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.Confined;
+            isGamePausedOrOver = true;
         }
     }
     public bool isGamePausedOrOver = false;
