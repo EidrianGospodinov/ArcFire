@@ -9,7 +9,6 @@ public class Timer : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private float timerTotalDuration = 120f;
     private Text text;
 
-    private float timeRemainingOLD;
     private double targetEndTime = 0.0;
     private double timerPausedAt = 0.0;
 
@@ -19,7 +18,6 @@ public class Timer : MonoBehaviourPunCallbacks, IPunObservable
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        timeRemainingOLD = timerTotalDuration;
         text = GetComponent<Text>();
         if (PhotonNetwork.IsMasterClient)
         {
