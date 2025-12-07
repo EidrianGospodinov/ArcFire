@@ -71,6 +71,18 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
     {
         SceneManager.LoadScene("Lobby");
     }
+
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
+    {
+        base.OnPlayerLeftRoom(otherPlayer);
+        if (PhotonNetwork.PlayerList.Length <= 1)
+        {
+            EndGameWithNoKillCountReached();
+            StorePersonalBest();
+        }
+        Debug.Log($"{otherPlayer} left the room");
+    }
+
     public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
     {
         if (targetPlayer.GetScore() == maxKills)
@@ -87,7 +99,7 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
         timer.OnTimerComplete -= OnGameTimerFinished;
     }
 
-    private void OnGameTimerFinished()
+    private void EndGameWithNoKillCountReached()
     {
         if (PhotonNetwork.InRoom)
         {
@@ -145,6 +157,9 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
             EndGame();   
         }
     }
+
+    private void OnGameTimerFinished() => EndGameWithNoKillCountReached();
+    
 
 
     
