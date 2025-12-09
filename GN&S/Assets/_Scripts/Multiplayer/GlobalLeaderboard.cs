@@ -21,7 +21,7 @@ namespace _Scripts.Multiplayer
 
         private void PlayFabGetLeaderboardError(PlayFabError obj)
         {
-            Debug.Log($"PlayFab - error occurred while getting leaderboard: {obj.Error}");
+            Debug.LogError($"PlayFab - error occurred while getting leaderboard: {obj.Error}");
         }
 
         private void PlayFabGetLeaderboardResult(GetLeaderboardResult getLeaderboardResult)
@@ -49,7 +49,7 @@ namespace _Scripts.Multiplayer
 
         private void PlayFabUpdateStatsError(PlayFabError obj)
         {
-            Debug.Log($"PlayFab - error occurred while submitting score: {obj.Error}");
+            Debug.LogError($"PlayFab - error occurred while submitting score: {obj.Error}");
         }
 
         void PlayFabUpdateStatsResult(UpdatePlayerStatisticsResult result)

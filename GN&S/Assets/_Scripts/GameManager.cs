@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public PlayerData playerData;
     public string filePath;
     public GlobalLeaderboard globalLeaderboard;
+    public WeeklyLeaderboard weeklyLeaderboard;
     
     
    // [SerializeField] public Transform[] PlayerTransformsArr = new Transform[4];//load them from the level manager in the future

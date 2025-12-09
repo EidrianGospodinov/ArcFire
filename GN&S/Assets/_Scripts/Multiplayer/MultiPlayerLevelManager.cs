@@ -166,7 +166,6 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
 
     void StorePersonalBest()
     {
-        Debug.Log("Store personal best score");
         int currentScore = PhotonNetwork.LocalPlayer.GetScore();
         PlayerData playerData = GameManager.Instance.playerData;
         if (currentScore > playerData.bestScore)
@@ -178,9 +177,11 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
             playerData.roomName = PhotonNetwork.CurrentRoom.Name;
             
             GameManager.Instance.globalLeaderboard.SubmitScore(currentScore);
-            
-            GameManager.Instance.SavePlayerData();
         }
+        GameManager.Instance.weeklyLeaderboard.SubmitScore(currentScore);
+        Debug.LogError($"Store personal best score for {playerData.username}");
+            
+        GameManager.Instance.SavePlayerData();
     }
 
     private void WinLoseTextUpdate(Photon.Realtime.Player targetPlayer)
