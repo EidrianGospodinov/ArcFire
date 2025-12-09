@@ -40,12 +40,24 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        ActivatePanel("Login");
-        playerNameInput.text = playerName = string.Format($"Player {Random.Range(1, 10000000)}");
+        if (GameManager.Instance.playerData.username == null)
+        {
+
+            ActivatePanel("Login");
+            playerNameInput.text = playerName = string.Format($"Player {Random.Range(1, 10000000)}");
+
+        }
+        else
+        {
+            PhotonNetwork.LocalPlayer.NickName = playerName = GameManager.Instance.playerData.username;
+            PhotonNetwork.ConnectUsingSettings();
+            UpdatePlayFabUsername(playerName);
+        }
 
         cachedRoomList = new Dictionary<string, RoomInfo>();
         PhotonNetwork.AutomaticallySyncScene = true;
     }
+
     public void StartGameClicked()
     {
         if (PhotonNetwork.PlayerList.Length >= 2 || canPlaySolo)

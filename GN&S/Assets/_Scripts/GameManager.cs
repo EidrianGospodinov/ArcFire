@@ -42,8 +42,22 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        gameObject.AddComponent<PhotonView>();
+        var isIdAllocated = PhotonNetwork.AllocateViewID(photonView);
+        if (!isIdAllocated)
+        {
+            Debug.Log($"Failed to allocated new id, current ID: {photonView.ViewID}");
+        }
         LoadPlayerData();
         LoginToPlayerData();
+    }
+
+    private void OnDestroy()
+    {
+        if (PhotonNetwork.IsConnected && photonView != null)
+        {
+            PhotonNetwork.Destroy(photonView);
+        }
     }
 
     private void LoginToPlayerData()
