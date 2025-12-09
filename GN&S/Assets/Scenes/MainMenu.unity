@@ -34786,6 +34786,25 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3037877216990397633, guid: 3d967820da22cf048941e92c246cc0f5, type: 3}
   m_PrefabInstance: {fileID: 683320840}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &91788162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91788158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd0378a5db6a24244bdbdeed01551bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreHolder: {fileID: 683320848}
+  noScoreHolder: {fileID: 1755057443}
+  userName: {fileID: 683320847}
+  bestScore: {fileID: 683320845}
+  date: {fileID: 683320844}
+  totalPlayers: {fileID: 683320843}
+  roomName: {fileID: 683320842}
 --- !u!1001 &99589657
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -76971,9 +76990,9 @@ PrefabInstance:
       insertIndex: 0
       addedObject: {fileID: 374985917}
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3037877217720389236, guid: 3d967820da22cf048941e92c246cc0f5, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 3037877216990397633, guid: 3d967820da22cf048941e92c246cc0f5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 683320850}
+      addedObject: {fileID: 91788162}
   m_SourcePrefab: {fileID: 100100000, guid: 3d967820da22cf048941e92c246cc0f5, type: 3}
 --- !u!224 &683320841 stripped
 RectTransform:
@@ -77040,30 +77059,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3037877216599139345, guid: 3d967820da22cf048941e92c246cc0f5, type: 3}
   m_PrefabInstance: {fileID: 683320840}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &683320849 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3037877217720389236, guid: 3d967820da22cf048941e92c246cc0f5, type: 3}
-  m_PrefabInstance: {fileID: 683320840}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &683320850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 683320849}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd0378a5db6a24244bdbdeed01551bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scoreHolder: {fileID: 683320848}
-  noScoreHolder: {fileID: 1755057443}
-  userName: {fileID: 683320847}
-  bestScore: {fileID: 683320845}
-  date: {fileID: 683320844}
-  totalPlayers: {fileID: 683320843}
-  roomName: {fileID: 683320842}
 --- !u!1001 &685538946
 PrefabInstance:
   m_ObjectHideFlags: 0
