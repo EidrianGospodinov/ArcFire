@@ -20,7 +20,7 @@ public class PersonalBestPopup : MonoBehaviour
     public void UpdatePersonalBesUI()
     {
         PlayerData playerData = GameManager.Instance.playerData;
-        if (playerData.username != null)
+        if (playerData != null)
         {
             userName.text = playerData.username;
             bestScore.text = playerData.bestScore.ToString();

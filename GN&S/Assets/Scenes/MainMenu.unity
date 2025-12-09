@@ -50888,10 +50888,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 683320841}
     m_Modifications:
-    - target: {fileID: 8924752786714360436, guid: 7178b8d709f91b44598a0404be69c83a, type: 3}
-      propertyPath: m_Name
-      value: CloseButton
-      objectReference: {fileID: 0}
     - target: {fileID: 8924752786983526452, guid: 7178b8d709f91b44598a0404be69c83a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -50976,26 +50972,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: LeaderboardPanel
       objectReference: {fileID: 0}
-    - target: {fileID: 8924752786983526455, guid: 7178b8d709f91b44598a0404be69c83a, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8924752786983526455, guid: 7178b8d709f91b44598a0404be69c83a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 374985921}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7178b8d709f91b44598a0404be69c83a, type: 3}
 --- !u!224 &374985917 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8924752786983526452, guid: 7178b8d709f91b44598a0404be69c83a, type: 3}
-  m_PrefabInstance: {fileID: 374985916}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &374985919 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8924752785694549410, guid: 7178b8d709f91b44598a0404be69c83a, type: 3}
   m_PrefabInstance: {fileID: 374985916}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &374985920 stripped
@@ -51003,11 +50987,10 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8924752786983526455, guid: 7178b8d709f91b44598a0404be69c83a, type: 3}
   m_PrefabInstance: {fileID: 374985916}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &374985921
+--- !u!114 &374985921 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 7186773197870412593, guid: 7178b8d709f91b44598a0404be69c83a, type: 3}
+  m_PrefabInstance: {fileID: 374985916}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 374985920}
   m_Enabled: 1
@@ -51015,9 +50998,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f57dca80d91b7ed47a3741ad68c55610, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreHolder: {fileID: 374985919}
-  noScoreText: {fileID: 0}
-  leaderboardItem: {fileID: 6370407759337929091, guid: d8c2a3f936478f548b64be8dbc06eab7, type: 3}
 --- !u!1001 &386261799
 PrefabInstance:
   m_ObjectHideFlags: 0

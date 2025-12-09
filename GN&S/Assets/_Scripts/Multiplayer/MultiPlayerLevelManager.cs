@@ -79,7 +79,6 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.PlayerList.Length <= 1)
         {
             EndGameWithNoKillCountReached();
-            StorePersonalBest();
         }
         Debug.Log($"{otherPlayer} left the room");
     }
@@ -90,7 +89,7 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
         {
             WinLoseTextUpdate(targetPlayer);
             EndGame();
-            StorePersonalBest();
+            
         }
     }
     
@@ -167,6 +166,7 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
 
     void StorePersonalBest()
     {
+        Debug.Log("Store personal best score");
         int currentScore = PhotonNetwork.LocalPlayer.GetScore();
         PlayerData playerData = GameManager.Instance.playerData;
         if (currentScore > playerData.bestScore)
@@ -197,6 +197,7 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
 
     private void EndGame()
     {
+        StorePersonalBest();
         var gameManagerInstance =  GameManager.Instance;
         gameManagerInstance.SetCursorState(false);
         gameManagerInstance.isGamePausedOrOver = true;
