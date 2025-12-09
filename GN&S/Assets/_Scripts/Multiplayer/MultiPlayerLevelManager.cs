@@ -29,6 +29,7 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
     [SerializeField] private Transform chatPanel;
 
     public Chat chat;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -175,6 +176,8 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
             playerData.bestScoreDate = DateTime.UtcNow.ToString();
             playerData.totalPlayerInGame = PhotonNetwork.CurrentRoom.PlayerCount;
             playerData.roomName = PhotonNetwork.CurrentRoom.Name;
+            
+            GameManager.Instance.globalLeaderboard.SubmitScore(currentScore);
             
             GameManager.Instance.SavePlayerData();
         }

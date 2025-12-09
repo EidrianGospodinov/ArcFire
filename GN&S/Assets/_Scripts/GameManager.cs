@@ -5,6 +5,9 @@ using System.Text;
 using _Scripts.Multiplayer;
 using Leguar.TotalJSON;
 using Photon.Pun;
+using Photon.Realtime;
+using PlayFab;
+using PlayFab.ClientModels;
 using UnityEngine;
 
 [System.Serializable]
@@ -19,6 +22,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static GameManager Instance { get; private set; }
     public PlayerData playerData;
     public string filePath;
+    public GlobalLeaderboard globalLeaderboard;
     
     
    // [SerializeField] public Transform[] PlayerTransformsArr = new Transform[4];//load them from the level manager in the future
@@ -39,6 +43,28 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         LoadPlayerData();
+        LoginToPlayerData();
+    }
+
+    private void LoginToPlayerData()
+    {
+        LoginWithCustomIDRequest request = new LoginWithCustomIDRequest()
+        {
+            CreateAccount = true,
+            CustomId = playerData.uid,
+        };
+
+        PlayFabClientAPI.LoginWithCustomID(request, PlayFabLoginResult, PlayFabLoginError);
+    }
+
+    void PlayFabLoginResult(LoginResult result)
+    {
+        Debug.Log($"Login successfully completed: {result.ToJson()}");
+    }
+
+    void PlayFabLoginError(PlayFabError error)
+    {
+        Debug.Log($"Login failed: {error.ErrorMessage}");
     }
 
     public void SavePlayerData()
