@@ -2,6 +2,7 @@ using NUnit.Framework;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using _Scripts.Multiplayer;
 using PlayFab;
 using PlayFab.ClientModels;
@@ -99,14 +100,24 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     public MultiplayerLobby()
     {
     }
-    public void LoginButtonClicked()
+
+    public void LoginButtonClicked() => LoginButtonClickedAsync();
+    private async Task LoginButtonClickedAsync()
     {
         if (playerNameInput.text.Trim() != "")
         {
             PhotonNetwork.LocalPlayer.NickName = playerName = playerNameInput.text;
             
-            UpdatePlayFabUsername(playerName);
-            PhotonNetwork.ConnectUsingSettings();
+            bool success = await UpdatePlayFabUsername(playerName);
+            if (success)
+            {
+                Debug.Log("PlayFab username update succeeded. Connecting to Photon...");
+                PhotonNetwork.ConnectUsingSettings();
+            }
+            else
+            {
+                Debug.LogError("PlayFab username update failed. Cannot connect to Photon.");
+            }
         }
         else
         {
@@ -115,23 +126,37 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
 
     }
 
-    private void UpdatePlayFabUsername(string name)
+    
+    private async Task<bool> UpdatePlayFabUsername(string name)
     {
+        var task = new TaskCompletionSource<bool>();
+
         UpdateUserTitleDisplayNameRequest request = new UpdateUserTitleDisplayNameRequest()
         {
             DisplayName = name,
         };
-        PlayFabClientAPI.UpdateUserTitleDisplayName(request, PlayFabUpdateUserTitleDisplayNameResult, PlayFabUpdateUserTitleDisplayNameError);
+    
+        // Call the PlayFab API, passing the tcs to the callbacks
+        PlayFabClientAPI.UpdateUserTitleDisplayName(
+            request, 
+            result => PlayFabUpdateUserTitleDisplayNameResult(result, task), 
+            error => PlayFabUpdateUserTitleDisplayNameError(error, task)
+        );
+    
+        return await task.Task;
     }
 
-    private void PlayFabUpdateUserTitleDisplayNameError(PlayFabError obj)
+    private void PlayFabUpdateUserTitleDisplayNameError(PlayFabError obj, TaskCompletionSource<bool> task)
     {
         Debug.Log($"PlayFab - Error occurred while updating userTitleDisplayName: {obj.Error}");
+        task.SetResult(false);
     }
 
-    private void PlayFabUpdateUserTitleDisplayNameResult(UpdateUserTitleDisplayNameResult obj)
+    private void PlayFabUpdateUserTitleDisplayNameResult(UpdateUserTitleDisplayNameResult obj,
+        TaskCompletionSource<bool> task)
     {
         Debug.Log("PlayFab - UserTitleDisplayName updated");
+        task.SetResult(true);
     }
 
     public override void OnConnectedToMaster()

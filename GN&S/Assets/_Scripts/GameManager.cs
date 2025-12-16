@@ -104,7 +104,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void LoadPlayerData()
     {
-        Debug.LogError(filePath);
         if(!File.Exists(filePath))
         {
             playerData = new PlayerData();
