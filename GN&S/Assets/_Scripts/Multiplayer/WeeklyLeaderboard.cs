@@ -42,17 +42,18 @@ namespace _Scripts.Multiplayer
                     }
                 }
             };
-            PlayFabClientAPI.UpdatePlayerStatistics(request, PlayFabUpdateStatsResult, PlayFabUpdateStatsError);
+            PlayFabClientAPI.UpdatePlayerStatistics(request, PlayFabUpdateStatsResult, error => PlayFabUpdateStatsError(error, score));
         }
 
-        private void PlayFabUpdateStatsError(PlayFabError obj)
+        private void PlayFabUpdateStatsError(PlayFabError obj, int score)
         {
-            Debug.LogError($"PlayFab - error occurred while submitting score: {obj.Error}");
+            Debug.LogError($"PlayFab - error occurred while submitting weekly score: {obj.Error}");
+            SubmitScore(score);
         }
 
         void PlayFabUpdateStatsResult(UpdatePlayerStatisticsResult result)
         {
-            Debug.Log("PlayFab - Score submitted");
+            Debug.Log("PlayFab - weekly Score submitted");
         }
     }
 }

@@ -49,12 +49,12 @@ namespace _Scripts.Multiplayer
 
         private void PlayFabUpdateStatsError(PlayFabError obj)
         {
-            Debug.LogError($"PlayFab - error occurred while submitting score: {obj.Error}");
+            Debug.LogError($"PlayFab - error occurred while submitting global score: {obj.Error}");
         }
 
         void PlayFabUpdateStatsResult(UpdatePlayerStatisticsResult result)
         {
-            Debug.Log("PlayFab - Score submitted");
+            Debug.Log("PlayFab - Global Score submitted");
         }
     }
 

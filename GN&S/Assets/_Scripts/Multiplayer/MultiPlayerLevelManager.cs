@@ -24,6 +24,7 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
     public Text winnerTitleText;
 
     public Text winnerBodyText;
+    private bool hasProcessedGameEnd = false;
 
     [Header("Chat")] 
     [SerializeField] private Transform chatPanel;
@@ -159,28 +160,28 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
     }
 
     private void OnGameTimerFinished() => EndGameWithNoKillCountReached();
-    
 
 
-    
+
+
 
     void StorePersonalBest()
     {
         int currentScore = PhotonNetwork.LocalPlayer.GetScore();
         PlayerData playerData = GameManager.Instance.playerData;
+        playerData.username = PhotonNetwork.LocalPlayer.NickName;
+        playerData.bestScoreDate = DateTime.UtcNow.ToString();
+        playerData.totalPlayerInGame = PhotonNetwork.CurrentRoom.PlayerCount;
+        playerData.roomName = PhotonNetwork.CurrentRoom.Name;
         if (currentScore > playerData.bestScore)
         {
-            playerData.username = PhotonNetwork.LocalPlayer.NickName;
             playerData.bestScore = currentScore;
-            playerData.bestScoreDate = DateTime.UtcNow.ToString();
-            playerData.totalPlayerInGame = PhotonNetwork.CurrentRoom.PlayerCount;
-            playerData.roomName = PhotonNetwork.CurrentRoom.Name;
-            
             GameManager.Instance.globalLeaderboard.SubmitScore(currentScore);
         }
+
         GameManager.Instance.weeklyLeaderboard.SubmitScore(currentScore);
-        Debug.LogError($"Store personal best score for {playerData.username}");
-            
+        Debug.LogError($"Store personal best score for {playerData.username}, is mine: {photonView.IsMine}({currentScore})");
+
         GameManager.Instance.SavePlayerData();
     }
 
@@ -198,6 +199,12 @@ public class MultiPlayerLevelManager : MonoBehaviourPunCallbacks
 
     private void EndGame()
     {
+        if (hasProcessedGameEnd)
+        {
+            return;
+        }
+
+        hasProcessedGameEnd = true;
         StorePersonalBest();
         var gameManagerInstance =  GameManager.Instance;
         gameManagerInstance.SetCursorState(false);

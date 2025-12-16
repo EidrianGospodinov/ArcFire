@@ -51,7 +51,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.LocalPlayer.NickName = playerName = GameManager.Instance.playerData.username;
             PhotonNetwork.ConnectUsingSettings();
-            UpdatePlayFabUsername(playerName);
+            //UpdatePlayFabUsername(playerName);
         }
 
         cachedRoomList = new Dictionary<string, RoomInfo>();
@@ -105,8 +105,8 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.LocalPlayer.NickName = playerName = playerNameInput.text;
             
-            PhotonNetwork.ConnectUsingSettings();
             UpdatePlayFabUsername(playerName);
+            PhotonNetwork.ConnectUsingSettings();
         }
         else
         {
