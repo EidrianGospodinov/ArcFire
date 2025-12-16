@@ -5,6 +5,7 @@ using System.Text;
 using _Scripts.Multiplayer;
 using Leguar.TotalJSON;
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using PlayFab;
 using PlayFab.ClientModels;
@@ -189,5 +190,31 @@ public class GameManager : MonoBehaviourPunCallbacks
             return;
 
         PhotonNetwork.CloseConnection(target);
+    }
+    public void RequestPoint(Photon.Realtime.Player target)
+    {
+        photonView.RPC("RequestPointRPC", RpcTarget.MasterClient, target.ActorNumber);
+    }
+
+    [PunRPC]
+    void RequestPointRPC(int actorNumber, PhotonMessageInfo info)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        var target = PhotonNetwork.CurrentRoom.GetPlayer(actorNumber);
+        if (target == null)
+            return;
+
+        target.AddScore(1);
+    }
+    
+    
+    //quick cheat I would not normally set it up like this if i had time
+    public event Action<string, string, int> OnPlayerCommand;
+    public void TriggerScoreSubmitted(string commandName,string playerName, int data)
+    {
+        // Invoke the event, passing the data to all listeners.
+        OnPlayerCommand?.Invoke(commandName,playerName,data);
     }
 }

@@ -7,23 +7,24 @@ namespace _Scripts.Multiplayer
 {
     public interface IGameCommand
     {
-        string Name { get; }
+        string commandName { get; }
         string Execute(CommandContext commandContext, string[] args); 
     }
     #region Commands
     public class HealCommand : IGameCommand
     {
-        public string Name => "heal";
+        public string commandName => "heal";
         
         public string Execute(CommandContext commandContext, string[] args)
         {
+            GameManager.Instance.TriggerScoreSubmitted(commandName,PhotonNetwork.LocalPlayer.NickName, 100);
             Debug.Log("Health set to 100!"); 
             return "You have been fully healed!";
         }
     }
     public class TimeCommand : IGameCommand
     {
-        public string Name => "time";
+        public string commandName => "time";
         public string Execute(CommandContext commandContext, string[] args)
         {
             var value = args[0];
@@ -41,7 +42,7 @@ namespace _Scripts.Multiplayer
     }
     public class PauseCommand : IGameCommand
     {
-        public string Name => "pause";
+        public string commandName => "pause";
         public string Execute(CommandContext commandContext, string[] args)
         {
             var value = args[0];
@@ -73,7 +74,7 @@ namespace _Scripts.Multiplayer
     }
     public class QuitCommand : IGameCommand
     {
-        public string Name => "quit";
+        public string commandName => "quit";
         public string Execute(CommandContext commandContext, string[] args)
         {
             Debug.Log("quit game"); 
@@ -82,7 +83,7 @@ namespace _Scripts.Multiplayer
     }
     public class KickCommand : IGameCommand
     {
-        public string Name => "kick";
+        public string commandName => "kick";
         public string Execute(CommandContext commandContext, string[] args)
         {
             foreach (var player in PhotonNetwork.PlayerList)
@@ -91,6 +92,23 @@ namespace _Scripts.Multiplayer
                {
                    GameManager.Instance.RequestKick(player);
                }
+                
+            }
+            Debug.Log("quit game"); 
+            return "Quitting game";
+        }
+    }
+    public class AddPointCommand : IGameCommand
+    {
+        public string commandName => "point";
+        public string Execute(CommandContext commandContext, string[] args)
+        {
+            foreach (var player in PhotonNetwork.PlayerList)
+            {
+                if (args[0] == player.NickName)
+                {
+                    GameManager.Instance.RequestPoint(player);
+                }
                 
             }
             Debug.Log("quit game"); 
@@ -110,11 +128,12 @@ namespace _Scripts.Multiplayer
             RegisterCommand(new KickCommand());
             RegisterCommand(new QuitCommand());
             RegisterCommand(new PauseCommand());
+            RegisterCommand(new AddPointCommand());
         }
 
         private void RegisterCommand(IGameCommand command)
         {
-            commands.Add(command.Name.ToLower(), command);
+            commands.Add(command.commandName.ToLower(), command);
         }
 
         public string Dispatch(string input)

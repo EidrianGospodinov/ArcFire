@@ -44,6 +44,7 @@ MonoBehaviour:
   - RPC_StartTimerRequest
   - RPC_StopTimerRequest
   - RequestKickRPC
+  - RequestPointRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

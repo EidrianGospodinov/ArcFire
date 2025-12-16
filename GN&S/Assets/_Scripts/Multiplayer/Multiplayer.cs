@@ -1,4 +1,5 @@
 
+using System;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using UnityEngine;
@@ -60,7 +61,22 @@ public class MultyPlayer : MonoBehaviour, IPunObservable
         {
             healthBar.gameObject.SetActive(false);
         }
+
+        GameManager.Instance.OnPlayerCommand += OnPlayerCommand;
     }
+
+    private void OnPlayerCommand(string commandName,string playerName, int value)
+    {
+        if (PhotonNetwork.LocalPlayer.NickName == playerName)
+        {
+            if(commandName == "heal")
+            {
+                health = maxHealth;
+                UpdateHealthUI();
+            }
+        }
+    }
+    
 
     // Update is called once per frame
     void FixedUpdate()
