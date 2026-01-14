@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             CreateAccount = true,
             CustomId = playerData.uid,
         };
-        Debug.LogError($"player data unique id {playerData.uid}");
+        Debug.Log($"player data unique id {playerData.uid}");
         
         PlayFabClientAPI.LoginWithCustomID(request, PlayFabLoginResult, PlayFabLoginError);
     }
